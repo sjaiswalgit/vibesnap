@@ -1,19 +1,108 @@
-import React, { useContext } from 'react';
-import { AuthContext } from '../context/AuthContext';
-import Profile from '../components/Profile/Profile';
+import React from "react";
 
-const ProfilePage = () => {
-  const { currentUser } = useContext(AuthContext);
-
-  if (!currentUser) {
-    return <p>Loading...</p>;
-  }
-
+function App() {
   return (
-    <div>
-      <Profile user={currentUser} />
+    <div className="bg-gray-100 min-h-screen">
+      {/* Header Section */}
+      <div className="relative">
+        {/* Background Image */}
+        <img
+          src="https://via.placeholder.com/600x300?text=Cover+Image"
+          alt="Cover"
+          className="w-full h-40 md:h-52 object-cover rounded-b-[1rem]"
+        />
+        {/* Profile Picture */}
+        <div className="absolute -bottom-12 left-4">
+          <img
+            src="https://via.placeholder.com/100" // Replace with profile image
+            alt="Profile"
+            className="w-30 h-30 md:w-28 md:h-28 rounded-full  shadow-md"
+          />
+        </div>
+        <div className="absolute bottom-[-3rem] right-4">
+          <button className="bg-white font-bold text-gray-800 px-4 py-2 rounded-full shadow-md border border-gray-300 w-[14rem]">
+            Edit Profile
+          </button>
+        </div>
+      </div>
+     
+
+      {/* User Bio */}
+      <div className="mt-16 px-4">
+        <h1 className="text-2xl font-bold">Sakshi Agarwal</h1>
+        <p className="text-gray-600 mt-2">
+          Just someone who loves designing, sketching, and finding beauty in the
+          little things 💕
+        </p>
+      </div>
+
+      {/* My Posts Section */}
+      <div className="px-4 mt-6">
+        <h2 className="text-lg font-bold mb-4">My Posts</h2>
+
+        {/* Posts Grid */}
+        <div className="grid grid-cols-2 gap-4">
+          {/* Post 1 */}
+          <div className="relative bg-white rounded-lg shadow-md overflow-hidden">
+            <img
+              src="https://via.placeholder.com/150x200?text=Design+Meet"
+              alt="Design Meet"
+              className="w-full h-48 object-cover"
+            />
+            <div className="absolute top-2 right-2 bg-gray-800 text-white text-xs px-2 py-1 rounded-full">
+              1/2
+            </div>
+            <div className="p-2">
+              <p className="text-gray-700 font-medium">Design meet</p>
+              <div className="flex items-center text-gray-500 text-sm mt-1">
+                <span>❤️</span>
+                <span className="ml-1">67</span>
+              </div>
+            </div>
+          </div>
+
+          {/* Post 2 */}
+          <div className="bg-gray-200 rounded-lg shadow-md overflow-hidden">
+            <img
+              src="https://via.placeholder.com/150x200?text=B2B+Work"
+              alt="B2B Work"
+              className="w-full h-48 object-cover opacity-75"
+            />
+            <div className="p-2">
+              <p className="text-gray-700 font-medium truncate">
+                Working on a B2B...
+              </p>
+              <div className="flex items-center text-gray-500 text-sm mt-1">
+                <span>🤍</span>
+                <span className="ml-1">40</span>
+              </div>
+            </div>
+          </div>
+
+          {/* Post 3 */}
+          <div className="bg-white rounded-lg shadow-md overflow-hidden">
+            <img
+              src="https://via.placeholder.com/150x200?text=Parachute"
+              alt="Parachute"
+              className="w-full h-48 object-cover"
+            />
+            <div className="p-2">
+              <p className="text-gray-700 font-medium">Parachute ❤️</p>
+              <div className="flex items-center text-gray-500 text-sm mt-1">
+                <span>❤️</span>
+                <span className="ml-1">65</span>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      {/* Floating Action Button */}
+      <button className="fixed bottom-6 right-6 bg-black text-white rounded-full w-12 h-12 flex items-center justify-center shadow-lg hover:bg-gray-800">
+        <span className="text-2xl">+</span>
+      </button>
     </div>
   );
-};
+}
 
-export default ProfilePage;
+export default App;
