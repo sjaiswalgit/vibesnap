@@ -1,38 +1,42 @@
 import React from "react";
-
-function App() {
+import { Link } from "react-router-dom";
+import { useAuthContext } from "../context/AuthContext";
+import AddPost from "../components/CreatePost/AddPost";
+function ProfilePage() {
+  const { currentUser } = useAuthContext()
   return (
     <div className="bg-gray-100 min-h-screen">
       {/* Header Section */}
       <div className="relative">
         {/* Background Image */}
         <img
-          src="https://via.placeholder.com/600x300?text=Cover+Image"
+          src={currentUser.coverURL || "https://via.placeholder.com/600x300?text=Cover+Image"}
           alt="Cover"
-          className="w-full h-40 md:h-52 object-cover rounded-b-[1rem]"
+          className="w-full h-40 object-cover rounded-b-[1rem]"
         />
         {/* Profile Picture */}
         <div className="absolute -bottom-12 left-4">
           <img
-            src="https://via.placeholder.com/100" // Replace with profile image
+            src={currentUser.photoURL || "https://via.placeholder.com/100"}
             alt="Profile"
-            className="w-30 h-30 md:w-28 md:h-28 rounded-full  shadow-md"
+            className="w-28 h-28 rounded-full object-contain shadow-md"
           />
         </div>
         <div className="absolute bottom-[-3rem] right-4">
-          <button className="bg-white font-bold text-gray-800 px-4 py-2 rounded-full shadow-md border border-gray-300 w-[14rem]">
-            Edit Profile
-          </button>
+          <Link to="/edit-profile">
+            <button className="bg-white font-bold text-gray-800 px-4 py-2 rounded-full border border-gray-300 w-[14rem]">
+              Edit Profile
+            </button>
+          </Link>
         </div>
       </div>
-     
+
 
       {/* User Bio */}
       <div className="mt-16 px-4">
-        <h1 className="text-2xl font-bold">Sakshi Agarwal</h1>
+        <h1 className="text-2xl font-bold capitalize">{currentUser.displayName}</h1>
         <p className="text-gray-600 mt-2">
-          Just someone who loves designing, sketching, and finding beauty in the
-          little things 💕
+        {currentUser.bio}
         </p>
       </div>
 
@@ -98,11 +102,9 @@ function App() {
       </div>
 
       {/* Floating Action Button */}
-      <button className="fixed bottom-6 right-6 bg-black text-white rounded-full w-12 h-12 flex items-center justify-center shadow-lg hover:bg-gray-800">
-        <span className="text-2xl">+</span>
-      </button>
+      <AddPost />
     </div>
   );
 }
 
-export default App;
+export default ProfilePage;

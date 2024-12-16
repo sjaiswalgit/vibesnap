@@ -4,6 +4,8 @@ import { AuthProvider } from './context/AuthContext';
 import Home from './pages/Home';
 import LoginPage from './pages/LoginPage';
 import ProfilePage from './pages/ProfilePage';
+import EditProfile from './pages/EditProfile';
+import CreatePost from './pages/CreatePost';
 import ProtectedRoute from './components/Auth/ProtectedRoute';
 
 const App = () => (
@@ -26,6 +28,22 @@ const App = () => (
         element={
           <ProtectedRoute>
             <ProfilePage />
+          </ProtectedRoute>
+        }
+      />
+      <Route
+        path="/edit-profile"
+        element={
+          <ProtectedRoute>
+            <EditProfile />
+          </ProtectedRoute>
+        }
+      />
+      <Route
+        path="/create-post"
+        element={
+          <ProtectedRoute>
+            <CreatePost />
           </ProtectedRoute>
         }
       />

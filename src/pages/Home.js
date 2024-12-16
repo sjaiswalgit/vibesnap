@@ -5,7 +5,7 @@ import { useAuthContext } from "../context/AuthContext";
 function Home() {
   const { currentUser } = useAuthContext();
 
-console.log(currentUser,currentUser.photoURL)
+
 
   return (
     <div className="bg-gray-100 min-h-screen p-4">
