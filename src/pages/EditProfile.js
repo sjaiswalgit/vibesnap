@@ -4,7 +4,8 @@ import { useAuthContext } from "../context/AuthContext";
 import { ref, uploadBytesResumable, getDownloadURL } from "firebase/storage";
 import { db, storage } from "../firebase/config";
 import { setDoc, doc } from "firebase/firestore";
-
+import { FaArrowLeft } from "react-icons/fa";
+import { useNavigate } from 'react-router-dom';
 function EditProfile() {
     const [name, setName] = useState("");
     const [bio, setBio] = useState("");
@@ -13,7 +14,7 @@ function EditProfile() {
     const [coverPreview, setCoverPreview] = useState(""); // For preview only
     const [coverFile, setCoverFile] = useState(null); // Actual file for upload
     const { currentUser } = useAuthContext();
-
+      const navigate = useNavigate();
     useEffect(() => {
         if (currentUser.displayName) {
             setName(currentUser.displayName);
@@ -67,6 +68,12 @@ function EditProfile() {
         <div className="bg-gray-100 min-h-screen">
             {/* Header Section */}
             <div className="relative">
+                <div className="absolute top-1 left-1 flex items-center p-4 text-white">
+                    <button onClick={() => { navigate(-1) }}>
+                        <FaArrowLeft className="text-lg" />
+                    </button>
+                    <h1 className="text-lg font-bold ml-4 text-white">Edit Profile</h1>
+                </div>
                 {/* Background Image */}
                 <img
                     src={coverPreview || "https://via.placeholder.com/600x300?text=Cover+Image"}

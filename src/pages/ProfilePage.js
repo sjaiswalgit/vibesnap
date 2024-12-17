@@ -24,7 +24,7 @@ function ProfilePage() {
         </div>
         <div className="absolute bottom-[-3rem] right-4">
           <Link to="/edit-profile">
-            <button className="bg-white font-bold text-gray-800 px-4 py-2 rounded-full border border-gray-300 w-[14rem]">
+            <button className="bg-white font-bold text-gray-800 px-4 py-2 rounded-full border border-gray-300 w-[12rem]">
               Edit Profile
             </button>
           </Link>
