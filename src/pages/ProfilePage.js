@@ -2,12 +2,21 @@ import React from "react";
 import { Link } from "react-router-dom";
 import { useAuthContext } from "../context/AuthContext";
 import AddPost from "../components/CreatePost/AddPost";
+import { FaArrowLeft } from "react-icons/fa";
+import { useNavigate } from 'react-router-dom';
 function ProfilePage() {
+   const navigate = useNavigate();
   const { currentUser } = useAuthContext()
   return (
     <div className="bg-gray-100 min-h-screen">
       {/* Header Section */}
       <div className="relative">
+        <div className="absolute top-1 left-1 flex items-center p-4 text-white">
+          <button onClick={() => { navigate(-1) }}>
+            <FaArrowLeft className="text-lg" />
+          </button>
+
+        </div>
         {/* Background Image */}
         <img
           src={currentUser.coverURL || "https://via.placeholder.com/600x300?text=Cover+Image"}
@@ -36,7 +45,7 @@ function ProfilePage() {
       <div className="mt-16 px-4">
         <h1 className="text-2xl font-bold capitalize">{currentUser.displayName}</h1>
         <p className="text-gray-600 mt-2">
-        {currentUser.bio}
+          {currentUser.bio}
         </p>
       </div>
 

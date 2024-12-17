@@ -69,10 +69,15 @@ function CreatePost() {
 
   const uploadPost = async () => {
     try {
+      if(!(caption &&files)){
+        alert("Please write or upload something")
+        return
+      }
       setLoading(true)
       const userDocRef = doc(db, "posts", currentUser.uid);
       const updatedData = {
         uid: currentUser.uid,
+        createdAt:new Date()
       };
       if (caption) {
         updatedData.caption = caption
