@@ -6,6 +6,7 @@ import { db, storage } from "../firebase/config";
 import { setDoc, doc } from "firebase/firestore";
 import { FaArrowLeft } from "react-icons/fa";
 import { useNavigate } from 'react-router-dom';
+import { useLoadingContext } from '../context/LoaderContext';
 function EditProfile() {
     const [name, setName] = useState("");
     const [bio, setBio] = useState("");
@@ -14,6 +15,7 @@ function EditProfile() {
     const [coverPreview, setCoverPreview] = useState(""); // For preview only
     const [coverFile, setCoverFile] = useState(null); // Actual file for upload
     const { currentUser } = useAuthContext();
+    const {setLoading}=useLoadingContext()
       const navigate = useNavigate();
     useEffect(() => {
         if (currentUser.displayName) {
@@ -38,6 +40,7 @@ function EditProfile() {
 
     const onSave = async () => {
         try {
+            setLoading(true)
             const userDocRef = doc(db, "users", currentUser.uid);
             const updatedData = {
                 uid: currentUser.uid,
@@ -61,6 +64,8 @@ function EditProfile() {
             console.log("Profile updated successfully!");
         } catch (err) {
             console.error("Error updating profile: ", err);
+        }finally{
+            setLoading(false)
         }
     };
 

@@ -9,7 +9,7 @@ export const LoaderPovider = ({ children }) => {
  
 
   return (
-    <LoadingContext.Provider  value={setLoading}>
+    <LoadingContext.Provider  value={{setLoading}}>
     <div className="relative">
       {/* Content that will be wrapped */}
       {children}

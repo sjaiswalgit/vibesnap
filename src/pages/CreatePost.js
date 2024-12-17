@@ -11,6 +11,7 @@ import { db, storage } from "../firebase/config";
 import { setDoc, doc } from "firebase/firestore";
 import { compressImage, compressVideo } from "../utils/compressor";
 import { useAuthContext } from "../context/AuthContext";
+import { useLoadingContext } from '../context/LoaderContext';
 
 function CreatePost() {
   const [files, setFiles] = useState([]);
@@ -18,6 +19,7 @@ function CreatePost() {
   const navigate = useNavigate();
   const {currentUser}= useAuthContext()
   const { deviceType } = useDeviceContext()
+     const {setLoading}=useLoadingContext()
   // Handle image upload
   const handleImageUpload = (e, type) => {
     const files = Array.from(e.target.files);
@@ -67,6 +69,7 @@ function CreatePost() {
 
   const uploadPost = async () => {
     try {
+      setLoading(true)
       const userDocRef = doc(db, "posts", currentUser.uid);
       const updatedData = {
         uid: currentUser.uid,
@@ -86,6 +89,9 @@ function CreatePost() {
       console.log("Profile updated successfully!");
     } catch (err) {
       console.error("Error updating profile: ", err);
+    }
+    finally{
+      setLoading(false)
     }
 
   }

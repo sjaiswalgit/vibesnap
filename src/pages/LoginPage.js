@@ -3,12 +3,13 @@ import googleIcon from '../assests/googleIcon.svg'
 import { signInWithPopup, signInWithRedirect } from 'firebase/auth';
 import { auth, provider, db } from '../firebase/config';
 import { doc, getDoc, setDoc } from 'firebase/firestore';
-
+import { useLoadingContext } from '../context/LoaderContext';
 
 const LoginPage = () => {
-
+  const {setLoading}=useLoadingContext()
     const handleGoogleLogin = async () => {
       try {
+        setLoading(true)
         const res = await signInWithPopup(auth, provider);
   
         // Create a document reference using doc() function
@@ -30,6 +31,9 @@ const LoginPage = () => {
   
       } catch (error) {
         console.error("Login Error:", error.message);
+      }
+      finally{
+        setLoading(false)
       }
     }
 
