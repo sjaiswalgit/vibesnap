@@ -47,13 +47,13 @@ function EditProfile() {
 
             // Upload profile photo if a new file is selected
             if (photoFile) {
-                const photoURL = await uploadFile(photoFile, `${currentUser.uid}_profile`);
+                const photoURL = await uploadFile(photoFile, `${currentUser.uid}/profile`);
                 updatedData.photoURL = photoURL;
             }
 
             // Upload cover photo if a new file is selected
             if (coverFile) {
-                const coverURL = await uploadFile(coverFile, `${currentUser.uid}_cover`);
+                const coverURL = await uploadFile(coverFile, `${currentUser.uid}/cover`);
                 updatedData.coverURL = coverURL;
             }
 

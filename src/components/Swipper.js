@@ -21,13 +21,13 @@ const ImageCarousel = ({ files, deleteImage }) => {
       {files.map((file, index) => (
         <SwiperSlide key={index} className="relative  overflow-hidden  ">
           <div className="relative aspect-square w-full overflow-hidden rounded-xl" >
-          {file.type=="image" &&
+          {file.type==="image" &&
           <img
             src={file.src}
             alt="Uploaded"
             className="w-full h-full object-cover rounded-lg"
           />}
-          {file.type=="video" &&
+          {file.type==="video" &&
           <video
             src={file.src}
             alt="Uploaded"

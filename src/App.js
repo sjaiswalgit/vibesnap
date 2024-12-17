@@ -8,9 +8,11 @@ import ProfilePage from './pages/ProfilePage';
 import EditProfile from './pages/EditProfile';
 import CreatePost from './pages/CreatePost';
 import ProtectedRoute from './components/Auth/ProtectedRoute';
+import {LoaderPovider} from './context/LoaderContext';
 
 const App = () => (
     <DeviceProvider>
+      <LoaderPovider>
     <AuthProvider>
       <Routes>
         {/* Public route */}
@@ -52,6 +54,7 @@ const App = () => (
         <Route path="*" element={<Navigate to="/" replace />} />
       </Routes>
     </AuthProvider>
+    </LoaderPovider>
     </DeviceProvider>
 
 );

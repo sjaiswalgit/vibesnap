@@ -6,10 +6,17 @@ import { PiVideoFill } from "react-icons/pi";
 import { FaCamera } from "react-icons/fa6";
 import { useNavigate } from 'react-router-dom';
 import ImageCarousel from "../components/Swipper";
+import { ref, uploadBytesResumable, getDownloadURL } from "firebase/storage";
+import { db, storage } from "../firebase/config";
+import { setDoc, doc } from "firebase/firestore";
+import { compressImage, compressVideo } from "../utils/compressor";
+import { useAuthContext } from "../context/AuthContext";
+
 function CreatePost() {
   const [files, setFiles] = useState([]);
   const [caption, setCaption] = useState(""); // State for caption
   const navigate = useNavigate();
+  const {currentUser}= useAuthContext()
   const { deviceType } = useDeviceContext()
   // Handle image upload
   const handleImageUpload = (e, type) => {
@@ -24,7 +31,65 @@ function CreatePost() {
     const newImages = files.filter((_, i) => i !== index);
     setFiles(newImages);
   };
-  console.log(deviceType)
+
+  const uploadFile = async (file, path) => {
+    const storageRef = ref(storage, path);
+    const uploadTask = await uploadBytesResumable(storageRef, file);
+    return getDownloadURL(uploadTask.ref); // Return the download URL after upload
+  };
+
+  const uploadMultipleFiles = async (files, folderPath) => {
+    try {
+      // Prepare upload promises for all files
+      const uploadPromises = files.map(async (file, index) => {
+        const filePath = `${folderPath}/${Date.now()}_${index}`;
+        if (file.type === "image") {
+          const compressedFile = await compressImage(file.file)
+          return uploadFile(compressedFile, filePath);
+        }
+        if (file.type === "video") {
+          const compressedFile = await compressVideo(file.file)
+          return uploadFile(compressedFile, filePath);
+        }
+
+      });
+
+      // Wait for all uploads to complete
+      const downloadURLs = await Promise.all(uploadPromises);
+      console.log("All files uploaded successfully:", downloadURLs);
+
+      return downloadURLs; // Array of download URLs
+    } catch (error) {
+      console.error("Error uploading multiple files:", error);
+      throw error;
+    }
+  };
+
+  const uploadPost = async () => {
+    try {
+      const userDocRef = doc(db, "posts", currentUser.uid);
+      const updatedData = {
+        uid: currentUser.uid,
+      };
+      if (caption) {
+        updatedData.caption = caption
+      }
+
+      // Upload profile photo if a new file is selected
+      if (files) {
+        const fileURLs = await uploadMultipleFiles(files, currentUser.uid);
+        updatedData.fileURLs = fileURLs;
+      }
+
+
+      await setDoc(userDocRef, updatedData, { merge: true });
+      console.log("Profile updated successfully!");
+    } catch (err) {
+      console.error("Error updating profile: ", err);
+    }
+
+  }
+
   return (
     <div className="bg-white min-h-screen flex flex-col">
       {/* Header */}
@@ -75,7 +140,7 @@ function CreatePost() {
               onChange={(e) => handleImageUpload(e, "video")}
             />
           </label>
-          {deviceType == "Mobile" &&
+          {deviceType === "Mobile" &&
             <label className="flex items-center space-x-2 text-blue-500 font-medium">
               <FaCamera />
               <span className="text-black font-bold">Camera</span>
@@ -104,7 +169,7 @@ function CreatePost() {
       }
       {/* Create Button */}
       <div className="mt-auto p-4">
-        <button className="bg-black text-white w-full py-3 rounded-full font-semibold text-lg">
+        <button onClick={uploadPost} className="bg-black text-white w-full py-3 rounded-full font-semibold text-lg">
           CREATE
         </button>
       </div>
