@@ -1,14 +1,15 @@
 // Import Swiper core and required modules
 import { Swiper, SwiperSlide } from "swiper/react";
 import { Navigation, Pagination } from "swiper/modules";
-
+import { MdDelete } from "react-icons/md";
 // Import Swiper and module styles
 
 import "swiper/css";
 import "swiper/css/navigation";
 import "swiper/css/pagination";
-
-const ImageCarousel = ({ images, deleteImage }) => {
+import "./custom.css"
+const ImageCarousel = ({ files, deleteImage }) => {
+ 
   return (
     <Swiper
       modules={[Navigation, Pagination]} // Register the modules here
@@ -17,24 +18,31 @@ const ImageCarousel = ({ images, deleteImage }) => {
       slidesPerView={1}
       className="flex overflow-x-auto space-x-2 "
     >
-      {images.map((image, index) => (
+      {files.map((file, index) => (
         <SwiperSlide key={index} className="relative  overflow-hidden  ">
           <div className="relative aspect-square w-full overflow-hidden rounded-xl" >
+          {file.type=="image" &&
           <img
-            src={image}
+            src={file.src}
             alt="Uploaded"
             className="w-full h-full object-cover rounded-lg"
-          />
+          />}
+          {file.type=="video" &&
+          <video
+            src={file.src}
+            alt="Uploaded"
+            className="w-full h-full object-cover rounded-lg"
+          />}
           <button
             onClick={() => {deleteImage(index)}}
-            className="absolute bottom-2 right-2 bg-black bg-opacity-50 text-white p-1 rounded-full"
+            className="absolute bottom-2 right-2 bg-black bg-opacity-50 text-white p-1 rounded-full text-2xl"
           >
-            Delete
+            <MdDelete />
           </button>
          
           {/* Image Counter */}
           <div className="absolute top-2 right-2 bg-white text-black text-xs px-2 py-1 rounded-full">
-            {index + 1}/{images.length}
+            {index + 1}/{files.length}
           </div>
           </div>
         </SwiperSlide>
