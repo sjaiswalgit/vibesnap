@@ -20,7 +20,7 @@ const Feed = () => {
       const postsQuery = query(
         collection(db, 'posts'),
         orderBy('createdAt', 'desc'),
-        limit(5),
+        limit(20),
         ...(lastDoc ? [startAfter(lastDoc)] : [])
       );
 
@@ -44,7 +44,7 @@ const Feed = () => {
 
       setPosts((prev) => [...posts, ...fetchedPosts]);
       setLastDoc(lastVisible);
-      setHasMore(postsSnapshot.docs.length === 5);
+      setHasMore(postsSnapshot.docs.length === 20);
     } catch (error) {
       console.error('Error fetching posts:', error);
     }
