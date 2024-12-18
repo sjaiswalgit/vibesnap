@@ -79,7 +79,8 @@ function CreatePost() {
       const userDocRef = doc(db, "posts", `${currentUser.uid}_${Date.now()}`);
       const updatedData = {
         uid: currentUser.uid,
-        likes:[],
+        likes:{},
+        likeCount:0,
         createdAt:new Date()
       };
       if (caption) {

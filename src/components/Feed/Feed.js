@@ -1,13 +1,14 @@
 import React, { useState, useEffect, useCallback } from 'react';
 import { db } from '../../firebase/config';
-import {collection, query, orderBy, limit, startAfter, doc, getDoc, getDocs } from 'firebase/firestore';
+import {collection, query, orderBy, limit, startAfter, doc, getDoc, getDocs,updateDoc } from 'firebase/firestore';
 import ImageCarousel from '../Swipper';
 import { FaRegHeart, FaHeart } from "react-icons/fa";
+import { useAuthContext } from '../../context/AuthContext';
 const Feed = () => {
   const [posts, setPosts] = useState([]);
   const [lastDoc, setLastDoc] = useState(null);
   const [hasMore, setHasMore] = useState(true);
- 
+  const { currentUser}=useAuthContext()
 
   // Fetch posts with user data
   const fetchPosts = useCallback(async () => {
@@ -30,6 +31,7 @@ const Feed = () => {
 
         fetchedPosts.push({
           ...postData,
+          id: docSnapshot.id,
           displayName: userDoc.exists() ? userDoc.data().displayName : 'Unknown User',
           displayPhoto: userDoc.exists() ? userDoc.data().photoURL : 'https://via.placeholder.com/40',
         });
@@ -74,6 +76,38 @@ const Feed = () => {
 
 }
 
+const handleLike=async(post,index)=>{
+  const postRef = doc(db, 'posts', post.id);
+  console.log("hhhg")
+  const newLiked=[...posts];
+  try {
+    if (post.likes[currentUser.uid]) {
+      // Unlike the post
+       updateDoc(postRef, {
+        [`likes.${currentUser.uid}`]: false,
+        likeCount: post.likeCount > 0 ? post.likeCount - 1 : 0,
+      });
+      newLiked[index].likes[currentUser.uid]=false;
+      newLiked[index].likeCount -=1 
+      setPosts(newLiked)
+    } else {
+      // Like the post
+       updateDoc(postRef, {
+        [`likes.${currentUser.uid}`]: true,
+        likeCount: post.likeCount + 1,
+      });
+
+      newLiked[index].likes[currentUser.uid]=true;
+      newLiked[index].likeCount += 1 
+      setPosts(newLiked)
+    }
+    
+  } catch (error) {
+    console.error('Error updating like:', error);
+  }
+}
+
+
 
 
 
@@ -101,9 +135,9 @@ const Feed = () => {
           </div>
 
           <div className="mt-4 flex items-center justify-between text-gray-600">
-            <div className="flex items-center space-x-1 text-red-500">
-              <span className="text-xl">{post.likes.length ===0? <FaRegHeart />: <FaHeart />}</span>
-              <span className="text-sm font-medium">{post.likes.length || ""}</span>
+            <div onClick={()=>handleLike(post,index)} className="flex items-center space-x-1 text-red-500">
+              <span className="text-xl">{post.likes[currentUser.uid]?<FaHeart />: <FaRegHeart />}</span>
+              <span className="text-sm font-medium">{post.likeCount || ""}</span>
             </div>
             <button className="flex items-center space-x-1 text-gray-600 font-medium">
               <span className="text-lg">🚀</span>
