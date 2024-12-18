@@ -26,6 +26,7 @@ const ImageCarousel = ({ files, deleteImage, showDeleteBTn = false }) => {
                 src={file.src}
                 alt="Uploaded"
                 className="w-full h-full object-cover rounded-lg"
+                loading="lazy"
               />}
             {file.type === "video" &&
               <video

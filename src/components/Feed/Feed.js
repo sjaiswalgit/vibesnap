@@ -121,6 +121,7 @@ const Feed = () => {
               src={post.displayPhoto}
               alt={post.displayName}
               className="w-10 h-10 rounded-full"
+              loading='lazy'
             />
             <div>
               <h3 className="font-bold">{post.displayName}</h3>
