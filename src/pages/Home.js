@@ -8,7 +8,7 @@ function Home() {
 
 
   return (
-    <div className="bg-gray-100 min-h-screen p-4">
+    <div className="bg-gray-100 h-screen p-4 w-screen">
       {/* Header Section */}
       <Link to="/profile">
       <header className="flex items-center space-x-4 mb-6">

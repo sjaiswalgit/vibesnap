@@ -47,11 +47,13 @@ function CreatePost() {
         const filePath = `${folderPath}/${Date.now()}_${index}`;
         if (file.type === "image") {
           const compressedFile = await compressImage(file.file)
-          return uploadFile(compressedFile, filePath);
+          const fileSRC = await uploadFile(compressedFile, filePath)
+          return {type:"image",src:fileSRC}
         }
         if (file.type === "video") {
           const compressedFile = await compressVideo(file.file)
-          return uploadFile(compressedFile, filePath);
+          const fileSRC = await uploadFile(compressedFile, filePath)
+          return {type:"video",src: fileSRC}
         }
 
       });
@@ -74,9 +76,10 @@ function CreatePost() {
         return
       }
       setLoading(true)
-      const userDocRef = doc(db, "posts", currentUser.uid);
+      const userDocRef = doc(db, "posts", `${currentUser.uid}_${Date.now()}`);
       const updatedData = {
         uid: currentUser.uid,
+        likes:[],
         createdAt:new Date()
       };
       if (caption) {
@@ -116,7 +119,7 @@ function CreatePost() {
         {files.length > 0 ? (
           <div className="relative p-6">
             {/* Image Preview */}
-            <ImageCarousel files={files} deleteImage={deleteImage} />
+            <ImageCarousel files={files} deleteImage={deleteImage} showDeleteBTn={true} />
           </div>
         ) : (
           <textarea

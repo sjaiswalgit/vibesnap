@@ -1,48 +1,109 @@
-import React from 'react'
-
+import React, { useState, useEffect, useCallback } from 'react';
+import { db } from '../../firebase/config';
+import {collection, query, orderBy, limit, startAfter, doc, getDoc, getDocs } from 'firebase/firestore';
+import ImageCarousel from '../Swipper';
+import { FaRegHeart, FaHeart } from "react-icons/fa";
 const Feed = () => {
+  const [posts, setPosts] = useState([]);
+  const [lastDoc, setLastDoc] = useState(null);
+  const [hasMore, setHasMore] = useState(true);
+ 
+
+  // Fetch posts with user data
+  const fetchPosts = useCallback(async () => {
+    if (!hasMore) return;
+    try {
+      const postsQuery = query(
+        collection(db, 'posts'),
+        orderBy('createdAt', 'desc'),
+        limit(20),
+        ...(lastDoc ? [startAfter(lastDoc)] : [])
+      );
+
+      const postsSnapshot = await getDocs(postsQuery);
+      const fetchedPosts = [];
+      let lastVisible = null;
+      console.log( postsSnapshot.docs.length)
+      for (const docSnapshot of postsSnapshot.docs) {
+        const postData = docSnapshot.data();
+        const userDoc = await getDoc(doc(db, 'users', postData.uid));
+
+        fetchedPosts.push({
+          ...postData,
+          displayName: userDoc.exists() ? userDoc.data().displayName : 'Unknown User',
+          displayPhoto: userDoc.exists() ? userDoc.data().photoURL : 'https://via.placeholder.com/40',
+        });
+
+        lastVisible = docSnapshot;
+      }
+
+      setPosts((prev) => [...posts, ...fetchedPosts]);
+      setLastDoc(lastVisible);
+      setHasMore(postsSnapshot.docs.length === 20);
+    } catch (error) {
+      console.error('Error fetching posts:', error);
+    }
+  }, [db, hasMore, lastDoc,setPosts,posts]);
+
+  // Infinite Scroll Handler
+  useEffect(() => {
+    fetchPosts();
+  }, [fetchPosts]);
+
+  const recentDate=(createdAt)=>{
+    const date=createdAt.seconds*1000;
+    const currentTimestamp= Date.now();
+
+    if((currentTimestamp-date)/1000<60)
+    {return ("just now")}
+    else if((currentTimestamp-date)/1000<3600)
+    {return (Math.floor((currentTimestamp-date)/60000)+" min ago")}
+    else if((currentTimestamp-date)/1000<3600*24)
+    {return (Math.floor((currentTimestamp-date)/3600000)+" hrs ago")}
+    else
+    {const formatedDate = new Date(date).toLocaleString(
+      "en-US",
+        {
+          month: "short",
+          day: "2-digit",
+          year: "numeric",
+        }
+    );
+    return formatedDate
+  }
+
+}
+
+
+
+
+
   return (
-    <div className="space-y-6">
-    <div className="bg-purple-100 p-4 rounded-2xl shadow-md">
-          {/* User Info */}
+    <div className=" space-y-6 h-[calc(100%-7rem)] overflow-y-auto [::-webkit-scrollbar]:none scrollbar-none">
+      {posts.map((post,index) => (
+        <div key={index} className={`p-4 rounded-2xl shadow-md ${index%2===0?"bg-purple-100":"bg-yellow-50"}`}>
           <div className="flex items-center space-x-3 mb-2">
             <img
-              src="https://via.placeholder.com/40" // Replace with Aarav's profile picture
-              alt="Aarav"
+              src={post.displayPhoto}
+              alt={post.displayName}
               className="w-10 h-10 rounded-full"
             />
             <div>
-              <h3 className="font-bold">Aarav</h3>
-              <p className="text-sm text-gray-400">2 hours ago</p>
+              <h3 className="font-bold">{post.displayName}</h3>
+              <p className="text-sm text-gray-400">{recentDate(post.createdAt)}</p>
             </div>
           </div>
 
-          {/* Post Text */}
-          <p className="text-gray-700 mb-3">
-            Just arrived in New York City! Excited to explore the sights, sounds,
-            and energy of this amazing place. 🗽<br />
-            <span className="text-blue-500 font-medium">#NYC #Travel</span>
-          </p>
+          <p className="text-gray-700 mb-3">{post.caption}</p>
 
-          {/* Post Images */}
-          <div className="grid grid-cols-2 gap-2 mb-4">
-            <img
-              src="https://via.placeholder.com/150x200?text=Statue+of+Liberty"
-              alt="Statue of Liberty"
-              className="rounded-lg object-cover w-full h-40"
-            />
-            <img
-              src="https://via.placeholder.com/150x200?text=NYC+Street"
-              alt="NYC Street"
-              className="rounded-lg object-cover w-full h-40"
-            />
+          <div>
+            <ImageCarousel files={post.fileURLs || []} />
           </div>
 
-          {/* Like and Share */}
-          <div className="flex items-center justify-between text-gray-600">
+          <div className="mt-4 flex items-center justify-between text-gray-600">
             <div className="flex items-center space-x-1 text-red-500">
-              <span className="text-xl">❤️</span>
-              <span className="text-sm font-medium">67</span>
+              <span className="text-xl">{post.likes.length ===0? <FaRegHeart />: <FaHeart />}</span>
+              <span className="text-sm font-medium">{post.likes.length || ""}</span>
             </div>
             <button className="flex items-center space-x-1 text-gray-600 font-medium">
               <span className="text-lg">🚀</span>
@@ -50,48 +111,17 @@ const Feed = () => {
             </button>
           </div>
         </div>
+      ))}
 
-        {/* Post 2 */}
-        <div className="bg-yellow-50 p-4 rounded-2xl shadow-md">
-          {/* User Info */}
-          <div className="flex items-center space-x-3 mb-2">
-            <img
-              src="https://via.placeholder.com/40" // Replace with Sneha's profile picture
-              alt="Sneha"
-              className="w-10 h-10 rounded-full"
-            />
-            <div>
-              <h3 className="font-bold">Sneha</h3>
-              <p className="text-sm text-gray-400">1 day ago</p>
-            </div>
-          </div>
-
-          {/* Post Text */}
-          <p className="text-gray-700 mb-3">
-            Taking a moment to slow down, breathe, and focus on myself. 🌿✨
-            Self-care isn’t selfish – it’s necessary. 💕<br />
-            <span className="text-blue-500 font-medium">
-              #SelfCare #MeTime #Wellness
-            </span>
-          </p>
-
-          {/* Post Image */}
-          <div className="relative">
-            <img
-              src="https://via.placeholder.com/300x200?text=Self-Care"
-              alt="Self-care"
-              className="rounded-lg w-full object-cover h-48"
-            />
-            {/* Play Button */}
-            <button className="absolute inset-0 flex items-center justify-center">
-              <div className="bg-white rounded-full w-12 h-12 flex items-center justify-center shadow-md">
-                <span className="text-gray-700 text-2xl">▶</span>
-              </div>
-            </button>
-          </div>
+      {hasMore && (
+        <div className="text-center">
+          <button onClick={fetchPosts} className="text-blue-500 font-medium">
+            Load More
+          </button>
         </div>
-        </div>
-  )
-}
+      )}
+    </div>
+  );
+};
 
-export default Feed
+export default Feed;
