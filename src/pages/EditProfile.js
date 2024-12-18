@@ -90,7 +90,7 @@ function EditProfile() {
                     <img
                         src={photoPreview || "https://via.placeholder.com/100"}
                         alt="Profile"
-                        className="w-28 h-28 rounded-full object-contain shadow-md"
+                        className="w-28 h-28 rounded-full object-cover shadow-md"
                     />
                     <div className="absolute bottom-2 right-0">
                         <label

@@ -5,7 +5,7 @@ import AddPost from "../components/CreatePost/AddPost";
 import { FaArrowLeft } from "react-icons/fa";
 import { useNavigate } from 'react-router-dom';
 function ProfilePage() {
-   const navigate = useNavigate();
+  const navigate = useNavigate();
   const { currentUser } = useAuthContext()
   return (
     <div className="bg-gray-100 min-h-screen">
@@ -28,7 +28,7 @@ function ProfilePage() {
           <img
             src={currentUser.photoURL || "https://via.placeholder.com/100"}
             alt="Profile"
-            className="w-28 h-28 rounded-full object-contain shadow-md"
+            className="w-28 h-28 rounded-full object-cover shadow-md"
           />
         </div>
         <div className="absolute bottom-[-3rem] right-4">
@@ -57,21 +57,8 @@ function ProfilePage() {
         <div className="grid grid-cols-2 gap-4">
           {/* Post 1 */}
           <div className="relative bg-white rounded-lg shadow-md overflow-hidden">
-            <img
-              src="https://via.placeholder.com/150x200?text=Design+Meet"
-              alt="Design Meet"
-              className="w-full h-48 object-cover"
-            />
-            <div className="absolute top-2 right-2 bg-gray-800 text-white text-xs px-2 py-1 rounded-full">
-              1/2
-            </div>
-            <div className="p-2">
-              <p className="text-gray-700 font-medium">Design meet</p>
-              <div className="flex items-center text-gray-500 text-sm mt-1">
-                <span>❤️</span>
-                <span className="ml-1">67</span>
-              </div>
-            </div>
+           
+            
           </div>
 
           {/* Post 2 */}
