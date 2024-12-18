@@ -71,7 +71,7 @@ function CreatePost() {
 
   const uploadPost = async () => {
     try {
-      if(!(caption &&files)){
+      if(!(caption || files)){
         alert("Please write or upload something")
         return
       }
@@ -96,8 +96,10 @@ function CreatePost() {
 
       await setDoc(userDocRef, updatedData, { merge: true });
       console.log("Profile updated successfully!");
+      navigate(-1)
     } catch (err) {
       console.error("Error updating profile: ", err);
+      alert("Err: uploading post")
     }
     finally{
       setLoading(false)
