@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useCallback } from 'react';
+import React, { useState, useEffect, useCallback,useRef } from 'react';
 import { db } from '../../firebase/config';
 import { collection, query, orderBy, limit, startAfter, doc, getDoc, getDocs, updateDoc } from 'firebase/firestore';
 import ImageCarousel from '../Swipper';
@@ -10,24 +10,25 @@ const Feed = () => {
   const [posts, setPosts] = useState([]);
   const [lastDoc, setLastDoc] = useState(null);
   const [hasMore, setHasMore] = useState(true);
+  const [loading,setLoading]= useState(false)
   const [showShare, setShowShare] = useState(false)
   const { currentUser } = useAuthContext()
-
+  const scrollRef = useRef(null)
   // Fetch posts with user data
   const fetchPosts = useCallback(async () => {
     if (!hasMore) return;
+    setLoading(true)
     try {
       const postsQuery = query(
         collection(db, 'posts'),
         orderBy('createdAt', 'desc'),
-        limit(20),
+        limit(5),
         ...(lastDoc ? [startAfter(lastDoc)] : [])
       );
 
       const postsSnapshot = await getDocs(postsQuery);
       const fetchedPosts = [];
       let lastVisible = null;
-      console.log("dssdd", postsSnapshot.docs.length)
       for (const docSnapshot of postsSnapshot.docs) {
         const postData = docSnapshot.data();
         const userDoc = await getDoc(doc(db, 'users', postData.uid));
@@ -44,15 +45,18 @@ const Feed = () => {
 
       setPosts((prev) => [...posts, ...fetchedPosts]);
       setLastDoc(lastVisible);
-      setHasMore(postsSnapshot.docs.length === 20);
+      setHasMore(postsSnapshot.docs.length === 5);
+      setLoading(false)
     } catch (error) {
       console.error('Error fetching posts:', error);
+      setLoading(false)
     }
-  }, [db, hasMore, lastDoc, setPosts, posts]);
+  }, [db, hasMore, lastDoc, setPosts, posts,setLoading]);
 
   // Infinite Scroll Handler
   useEffect(() => {
     fetchPosts();
+
   }, []);
 
   const recentDate = (createdAt) => {
@@ -77,8 +81,8 @@ const Feed = () => {
   }
 
   const handleLike = async (post, index) => {
+    
     const postRef = doc(db, 'posts', post.id);
-    console.log("hhhg")
     const newLiked = [...posts];
     try {
       if (post.likes[currentUser.uid]) {
@@ -108,12 +112,34 @@ const Feed = () => {
   }
 
 
+  const handleScroll = () => {
+    const scrollbar = scrollRef.current;
+    if (scrollbar && !loading) {
+      const { scrollTop, scrollHeight, clientHeight } = scrollbar;
+      if (scrollHeight - scrollTop <= clientHeight+1500) {
+        console.log("Near the bottom, load more items!");
+        fetchPosts();
+        // Call your function to load more data here
+      }
+    }
+  };
 
+ 
+  useEffect(() => {
+    const scrollbar = scrollRef.current;
+    if (scrollbar) {
+      scrollbar.addEventListener("scroll", handleScroll);
+    }
 
-  console.log(posts.length)
+    return () => {
+      if (scrollbar) {
+        scrollbar.removeEventListener("scroll", handleScroll);
+      }
+    };
+  }, [loading]);
 
   return (
-    <div className="space-y-6 h-[calc(100%-7rem)] overflow-y-auto no-scrollbar">
+    <div ref={scrollRef} className="space-y-6 h-[calc(100%-7rem)] overflow-y-auto no-scrollbar">
       {posts.map((post, index) => (
         <div key={index} className={`p-4 rounded-2xl shadow-md ${index % 2 === 0 ? "bg-purple-100" : "bg-yellow-50"}`}>
           <div className="flex items-center space-x-3 mb-2">
@@ -148,11 +174,12 @@ const Feed = () => {
         </div>
       ))}
 
-      {hasMore && (
+      {loading && (
         <div className="text-center">
-          <button onClick={fetchPosts} className="text-blue-500 font-medium">
-            Load More
-          </button>
+          <div className="flex items-center justify-center space-x-2">
+            <div className="w-5 h-5 border-4 border-t-4 border-t-transparent border-blue-500 rounded-full animate-spin"></div>
+            <span className=" font-semibold text-md">Loading...</span>
+          </div>
         </div>
       )}
       {/* Share Menu */}

@@ -17,9 +17,9 @@ function CreatePost() {
   const [files, setFiles] = useState([]);
   const [caption, setCaption] = useState(""); // State for caption
   const navigate = useNavigate();
-  const {currentUser}= useAuthContext()
+  const { currentUser } = useAuthContext()
   const { deviceType } = useDeviceContext()
-     const {setLoading}=useLoadingContext()
+  const { setLoading } = useLoadingContext()
   // Handle image upload
   const handleImageUpload = (e, type) => {
     const files = Array.from(e.target.files);
@@ -48,12 +48,12 @@ function CreatePost() {
         if (file.type === "image") {
           const compressedFile = await compressImage(file.file)
           const fileSRC = await uploadFile(compressedFile, filePath)
-          return {type:"image",src:fileSRC}
+          return { type: "image", src: fileSRC }
         }
         if (file.type === "video") {
           const compressedFile = await compressVideo(file.file)
           const fileSRC = await uploadFile(compressedFile, filePath)
-          return {type:"video",src: fileSRC}
+          return { type: "video", src: fileSRC }
         }
 
       });
@@ -71,7 +71,7 @@ function CreatePost() {
 
   const uploadPost = async () => {
     try {
-      if(!(caption || files)){
+      if (!(caption || files.length > 0)) {
         alert("Please write or upload something")
         return
       }
@@ -79,9 +79,9 @@ function CreatePost() {
       const userDocRef = doc(db, "posts", `${currentUser.uid}_${Date.now()}`);
       const updatedData = {
         uid: currentUser.uid,
-        likes:{},
-        likeCount:0,
-        createdAt:new Date()
+        likes: {},
+        likeCount: 0,
+        createdAt: new Date()
       };
       if (caption) {
         updatedData.caption = caption
@@ -101,7 +101,7 @@ function CreatePost() {
       console.error("Error updating profile: ", err);
       alert("Err: uploading post")
     }
-    finally{
+    finally {
       setLoading(false)
     }
 
