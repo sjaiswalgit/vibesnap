@@ -11,6 +11,7 @@ import { db, storage } from "../firebase/config";
 import { setDoc, doc } from "firebase/firestore";
 import { compressImage, compressVideo } from "../utils/compressor";
 import { useAuthContext } from "../context/AuthContext";
+import { toast } from "react-toastify";
 
 function CreatePost() {
   const [files, setFiles] = useState([]);
@@ -95,8 +96,8 @@ function CreatePost() {
 
 
       await setDoc(userDocRef, updatedData, { merge: true });
-      console.log("Profile updated successfully!");
-      navigate(-1)
+      console.log("Post uploaded successfully!");
+      toast("Post Uploaded",{type:"success"})
     } catch (err) {
       console.error("Error updating profile: ", err);
       alert("Err: uploading post")

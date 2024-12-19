@@ -8,6 +8,7 @@ import { FaArrowLeft } from "react-icons/fa";
 import { useNavigate } from 'react-router-dom';
 import { compressImage } from "../utils/compressor";
 import ProfileIcon from "../assests/profileIcon.jpg"
+import { toast } from "react-toastify";
 function EditProfile() {
     const [name, setName] = useState("");
     const [bio, setBio] = useState("");
@@ -63,9 +64,11 @@ function EditProfile() {
             }
 
             await setDoc(userDocRef, updatedData, { merge: true });
+            toast("Profile updated",{type:"success"})
             console.log("Profile updated successfully!");
         } catch (err) {
             console.error("Error updating profile: ", err);
+            alert("Err: updating profile")
         } finally {
             setLoading(false)
         }

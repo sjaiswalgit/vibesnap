@@ -8,6 +8,7 @@ import ProfilePage from './pages/ProfilePage';
 import EditProfile from './pages/EditProfile';
 import CreatePost from './pages/CreatePost';
 import ProtectedRoute from './components/Auth/ProtectedRoute';
+import { ToastContainer } from 'react-toastify';
 
 
 const App = () => (
@@ -52,6 +53,7 @@ const App = () => (
           />
           <Route path="*" element={<Navigate to="/" replace />} />
         </Routes>
+        <ToastContainer />
       </AuthProvider>
   </DeviceProvider>
 
