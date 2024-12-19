@@ -12,8 +12,8 @@ export const compressImage = async (file) => {
     try {
         // Image compression options
         const options = {
-            maxSizeMB: 0.5, // Max size 0.5MB
-            maxWidthOrHeight: 800, // Resize to 800px (maintain aspect ratio)
+            maxSizeMB: 0.05, // Max size 0.05MB
+            maxWidthOrHeight: 800, // Resize to 400px (maintain aspect ratio)
             useWebWorker: true,
         };
 

@@ -2,16 +2,19 @@ import React, { createContext, useState, useEffect, useContext, useCallback } fr
 import { onAuthStateChanged } from 'firebase/auth';
 import { auth, db } from '../firebase/config';
 import { doc, onSnapshot } from 'firebase/firestore';
-import { useLoadingContext } from './LoaderContext';
 export const AuthContext = createContext();
 
 
 export const AuthProvider = ({ children }) => {
     const [userId, setUserId] = useState(null);
+    const [loading,setLoading] = useState(false)
     const [currentUser, setCurrentUser] = useState(null);
-    const {setLoading}=useLoadingContext()
 
     useEffect(() => {
+        const userData = localStorage.getItem("currentUser")
+        if(userData){
+            setCurrentUser(JSON.parse(userData))
+        }
         setLoading(true)
         const unsub = onAuthStateChanged(auth, async (user) => {
             if (user) {
@@ -35,7 +38,9 @@ export const AuthProvider = ({ children }) => {
             setLoading(true)
             const unsub = onSnapshot(doc(db, "users", userId), (document) => {
                 if (document?.exists()) { // Check if document exists.
-                    setCurrentUser(document.data());
+                    const userData = document.data()
+                    localStorage.setItem("currentUser",JSON.stringify(userData))
+                    setCurrentUser(userData);
                 } else {
                     setCurrentUser(null); // Handle the case where the document doesn't exist.
                 }
@@ -51,10 +56,11 @@ export const AuthProvider = ({ children }) => {
             unsubscribe(); // Cleanup the subscription when the component unmounts or `userId` changes.
         };
     }, [userId]);
+
     
 
     return (
-        <AuthContext.Provider value={{ currentUser }}>
+        <AuthContext.Provider value={{ currentUser,loading,setLoading }}>
             {children}
         </AuthContext.Provider>
     );

@@ -6,7 +6,7 @@ import { db, storage } from "../firebase/config";
 import { setDoc, doc } from "firebase/firestore";
 import { FaArrowLeft } from "react-icons/fa";
 import { useNavigate } from 'react-router-dom';
-import { useLoadingContext } from '../context/LoaderContext';
+import { compressImage } from "../utils/compressor";
 import ProfileIcon from "../assests/profileIcon.jpg"
 function EditProfile() {
     const [name, setName] = useState("");
@@ -15,9 +15,9 @@ function EditProfile() {
     const [photoFile, setPhotoFile] = useState(null); // Actual file for upload
     const [coverPreview, setCoverPreview] = useState(""); // For preview only
     const [coverFile, setCoverFile] = useState(null); // Actual file for upload
+    const [loading, setLoading] = useState(false)
     const { currentUser } = useAuthContext();
-    const {setLoading}=useLoadingContext()
-      const navigate = useNavigate();
+    const navigate = useNavigate();
     useEffect(() => {
         if (currentUser.displayName) {
             setName(currentUser.displayName);
@@ -51,7 +51,8 @@ function EditProfile() {
 
             // Upload profile photo if a new file is selected
             if (photoFile) {
-                const photoURL = await uploadFile(photoFile, `${currentUser.uid}/profile`);
+                const compressedFile = await compressImage(photoFile)
+                const photoURL = await uploadFile(compressedFile, `${currentUser.uid}/profile`);
                 updatedData.photoURL = photoURL;
             }
 
@@ -65,7 +66,7 @@ function EditProfile() {
             console.log("Profile updated successfully!");
         } catch (err) {
             console.error("Error updating profile: ", err);
-        }finally{
+        } finally {
             setLoading(false)
         }
     };
@@ -84,7 +85,7 @@ function EditProfile() {
                 <img
                     src={coverPreview || "https://placehold.co/600x300?text=Cover%20+%20Image"}
                     alt="Cover"
-                    onError={(e)=>{e.target.src="https://placehold.co/600x300?text=Cover%20+%20Image"}}
+                    onError={(e) => { e.target.src = "https://placehold.co/600x300?text=Cover%20+%20Image" }}
                     className="w-full h-40 object-cover rounded-b-[1rem]"
                 />
                 {/* Profile Picture */}
@@ -92,7 +93,7 @@ function EditProfile() {
                     <img
                         src={photoPreview || ProfileIcon}
                         alt="Profile"
-                        onError={(e)=>{e.target.src=ProfileIcon}}
+                        onError={(e) => { e.target.src = ProfileIcon }}
                         className="w-28 h-28 rounded-full object-cover shadow-md"
                     />
                     <div className="absolute bottom-2 right-0">
@@ -174,6 +175,14 @@ function EditProfile() {
                     Save
                 </button>
             </div>
+            {loading && (
+                <div className="fixed top-0 left-0 w-full h-full bg-black bg-opacity-50 flex items-center justify-center z-50">
+                    <div className="flex items-center justify-center space-x-2">
+                        <div className="w-10 h-10 border-4 border-t-4 border-t-transparent border-blue-500 rounded-full animate-spin"></div>
+                        <span className="text-white font-semibold text-xl">Saving...</span>
+                    </div>
+                </div>
+            )}
         </div>
     );
 }

@@ -1,6 +1,6 @@
 import React, { useState, useEffect, useCallback, useRef } from 'react';
 import { db } from '../../firebase/config';
-import { collection, query, orderBy, limit, startAfter, doc, getDoc, getDocs, updateDoc } from 'firebase/firestore';
+import { collection, query, orderBy, limit, startAfter, doc, where, getDocs, updateDoc } from 'firebase/firestore';
 import ImageCarousel from '../Swipper';
 import { FaRegHeart, FaHeart } from "react-icons/fa";
 import { useAuthContext } from '../../context/AuthContext';
@@ -20,41 +20,66 @@ const Feed = () => {
   // Fetch posts with user data
   const fetchPosts = useCallback(async () => {
     if (!hasMore) return;
-    setLoading(true)
+    setLoading(true);
+  
     try {
+      console.time("Fetch Posts");
+  
+      // Query to fetch posts
       const postsQuery = query(
         collection(db, 'posts'),
         orderBy('createdAt', 'desc'),
         limit(20),
         ...(lastDoc ? [startAfter(lastDoc)] : [])
       );
-
       const postsSnapshot = await getDocs(postsQuery);
-      const fetchedPosts = [];
-      let lastVisible = null;
-      for (const docSnapshot of postsSnapshot.docs) {
-        const postData = docSnapshot.data();
-        const userDoc = await getDoc(doc(db, 'users', postData.uid));
-
-        fetchedPosts.push({
+  
+      console.time("Batch Fetch User Data");
+  
+      // Get unique user IDs from the posts
+      const userIds = Array.from(
+        new Set(postsSnapshot.docs.map((doc) => doc.data().uid))
+      );
+  
+      // Batch fetch user documents
+      const userQuery = query(collection(db, 'users'), where('__name__', 'in', userIds));
+      const userSnapshots = await getDocs(userQuery);
+  
+      // Map user data for quick lookup
+      const userMap = new Map();
+      userSnapshots.forEach((doc) => {
+        userMap.set(doc.id, doc.data());
+      });
+  
+      console.timeEnd("Batch Fetch User Data");
+  
+      // Map posts with user details
+      const fetchedPosts = postsSnapshot.docs.map((doc) => {
+        const postData = doc.data();
+        const user = userMap.get(postData.uid) || {};
+        return {
           ...postData,
-          id: docSnapshot.id,
-          displayName: userDoc.exists() ? userDoc.data().displayName : 'Unknown User',
-          displayPhoto: userDoc.exists() ? userDoc.data().photoURL : 'https://via.placeholder.com/40',
-        });
-
-        lastVisible = docSnapshot;
-      }
-
-      setPosts((prev) => [...posts, ...fetchedPosts]);
-      setLastDoc(lastVisible);
+          id: doc.id,
+          displayName: user.displayName || 'Unknown User',
+          displayPhoto: user.photoURL || 'https://via.placeholder.com/40',
+        };
+      });
+  
+      // Update state
+      setPosts((prev) => [...prev, ...fetchedPosts]);
+      setLastDoc(postsSnapshot.docs[postsSnapshot.docs.length - 1] || null);
       setHasMore(postsSnapshot.docs.length === 20);
-      setLoading(false)
+  
+      console.timeEnd("Fetch Posts");
+      setLoading(false);
     } catch (error) {
       console.error('Error fetching posts:', error);
-      setLoading(false)
+      setLoading(false);
     }
   }, [db, hasMore, lastDoc, setPosts, posts, setLoading]);
+  
+  
+  
 
   // Infinite Scroll Handler
   useEffect(() => {
