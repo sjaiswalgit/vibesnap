@@ -107,6 +107,21 @@ function CreatePost() {
 
   }
 
+  const renderHashtags = (content) => {
+    
+    return content.split(/(\s+)/).map((word, index) => {
+      // Check if the word starts with '#'
+      if (word.startsWith("#")) {
+        return (
+          <span key={index} className="text-blue-500">
+            {word}
+          </span>
+        );
+      }
+      return word; // Return non-hashtag words as is
+    })
+  }
+
   return (
     <div className="bg-white min-h-screen flex flex-col">
       {/* Header */}

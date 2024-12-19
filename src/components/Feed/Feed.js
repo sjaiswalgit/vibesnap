@@ -22,7 +22,7 @@ const Feed = () => {
       const postsQuery = query(
         collection(db, 'posts'),
         orderBy('createdAt', 'desc'),
-        limit(5),
+        limit(20),
         ...(lastDoc ? [startAfter(lastDoc)] : [])
       );
 
@@ -45,7 +45,7 @@ const Feed = () => {
 
       setPosts((prev) => [...posts, ...fetchedPosts]);
       setLastDoc(lastVisible);
-      setHasMore(postsSnapshot.docs.length === 5);
+      setHasMore(postsSnapshot.docs.length === 20);
       setLoading(false)
     } catch (error) {
       console.error('Error fetching posts:', error);
@@ -138,6 +138,21 @@ const Feed = () => {
     };
   }, [loading]);
 
+  const renderHashtags = (content) => {
+    if(!content) return ""
+    return content.split(/(\s+)/).map((word, index) => {
+      // Check if the word starts with '#'
+      if (word.startsWith("#")) {
+        return (
+          <span key={index} className="text-blue-500">
+            {word}
+          </span>
+        );
+      }
+      return word; // Return non-hashtag words as is
+    });
+  };
+
   return (
     <div ref={scrollRef} className="space-y-6 h-[calc(100%-7rem)] overflow-y-auto no-scrollbar">
       {posts.map((post, index) => (
@@ -155,7 +170,7 @@ const Feed = () => {
             </div>
           </div>
 
-          <p className="text-gray-700 mb-3">{post.caption}</p>
+          <p className="text-gray-700 mb-3">{renderHashtags(post.caption)}</p>
 
           <div>
             <ImageCarousel files={post.fileURLs || []} />

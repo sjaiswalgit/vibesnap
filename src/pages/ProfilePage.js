@@ -1,14 +1,63 @@
-import React from "react";
+import React, { useEffect, useState, useCallback, useRef } from "react";
 import { Link } from "react-router-dom";
 import { useAuthContext } from "../context/AuthContext";
+import { db } from '../firebase/config';
+import { collection, query, orderBy, limit, startAfter, doc, getDoc, getDocs, where } from 'firebase/firestore';
 import AddPost from "../components/CreatePost/AddPost";
-import { FaArrowLeft } from "react-icons/fa";
+import { FaArrowLeft, FaHeart } from "react-icons/fa";
 import { useNavigate } from 'react-router-dom';
 function ProfilePage() {
-  const navigate = useNavigate();
+  const [posts, setPosts] = useState([]);
+  const [lastDoc, setLastDoc] = useState(null);
+  const [hasMore, setHasMore] = useState(true);
+  const [loading, setLoading] = useState(false)
+  const [showShare, setShowShare] = useState(false)
   const { currentUser } = useAuthContext()
+  const navigate = useNavigate();
+  const scrollRef = useRef(null)
+  // Fetch posts with user data
+  const fetchPosts = useCallback(async () => {
+    if (!hasMore) return;
+    setLoading(true)
+    try {
+      const postsQuery = query(
+        collection(db, 'posts'),
+        where('uid', '==', currentUser.uid),
+        orderBy('createdAt', 'desc'),
+        limit(5),
+        ...(lastDoc ? [startAfter(lastDoc)] : [])
+      );
+
+      const postsSnapshot = await getDocs(postsQuery);
+      const fetchedPosts = [];
+      let lastVisible = null;
+      for (const docSnapshot of postsSnapshot.docs) {
+        const postData = docSnapshot.data();
+
+
+        fetchedPosts.push(postData);
+
+        lastVisible = docSnapshot;
+      }
+
+      setPosts((prev) => [...posts, ...fetchedPosts]);
+      setLastDoc(lastVisible);
+      setHasMore(postsSnapshot.docs.length === 5);
+      setLoading(false)
+    } catch (error) {
+      console.error('Error fetching posts:', error);
+      setLoading(false)
+    }
+  }, [db, hasMore, lastDoc, setPosts, posts, setLoading]);
+
+  useEffect(() => {
+    fetchPosts();
+
+  }, []);
+
+
   return (
-    <div className="bg-gray-100 min-h-screen">
+    <div className="bg-gray-100 h-screen w-screen">
       {/* Header Section */}
       <div className="relative">
         <div className="absolute top-1 left-1 flex items-center p-4 text-white">
@@ -50,51 +99,46 @@ function ProfilePage() {
       </div>
 
       {/* My Posts Section */}
-      <div className="px-4 mt-6">
+      <div className="px-4 mt-6 ">
         <h2 className="text-lg font-bold mb-4">My Posts</h2>
-
-        {/* Posts Grid */}
-        <div className="grid grid-cols-2 gap-4">
-          {/* Post 1 */}
-          <div className="relative bg-white rounded-lg shadow-md overflow-hidden">
-           
-            
+        <div className="w-[100%] h-[30rem] overflow-y-auto">
+          {/* Posts Grid */}
+          <div className="w-[100%] " style={{ columns: "2" }}>
+            {/* Post 1 */}
+            {posts.filter((e)=>e.fileURLs.length>0).map((post, index) => (
+              <div key={index} className="relative w-full bg-white rounded-lg shadow-md overflow-hidden mb-2">
+                {post.fileURLs.length > 0 && post.fileURLs[0].type == "image" &&
+                  <img
+                    src={post.fileURLs[0].src}
+                    alt="posts pic"
+                    className="w-full h-auto object-cover"
+                  />}
+                {post.fileURLs.length > 0 && post.fileURLs[0].type == "video" &&
+                  <video
+                    src={post.fileURLs[0].src}
+                    alt="posts pic"
+                    className="w-full h-auto object-cover"
+                  />}
+                <div className="absolute bottom-2 left-0 p-2">
+                <p className="w-[8rem] text-white font-medium overflow-ellipsis overflow-hidden whitespace-nowrap">{post.caption || ""}</p>
+                  <div className="flex items-center text-gray-500 text-sm mt-1">
+                    <span><FaHeart /></span>
+                    <span className="ml-1">{post.likeCount || 0}</span>
+                  </div>
+                </div>
+              </div>
+            ))}
           </div>
 
-          {/* Post 2 */}
-          <div className="bg-gray-200 rounded-lg shadow-md overflow-hidden">
-            <img
-              src="https://via.placeholder.com/150x200?text=B2B+Work"
-              alt="B2B Work"
-              className="w-full h-48 object-cover opacity-75"
-            />
-            <div className="p-2">
-              <p className="text-gray-700 font-medium truncate">
-                Working on a B2B...
-              </p>
-              <div className="flex items-center text-gray-500 text-sm mt-1">
-                <span>🤍</span>
-                <span className="ml-1">40</span>
-              </div>
-            </div>
-          </div>
-
-          {/* Post 3 */}
-          <div className="bg-white rounded-lg shadow-md overflow-hidden">
-            <img
-              src="https://via.placeholder.com/150x200?text=Parachute"
-              alt="Parachute"
-              className="w-full h-48 object-cover"
-            />
-            <div className="p-2">
-              <p className="text-gray-700 font-medium">Parachute ❤️</p>
-              <div className="flex items-center text-gray-500 text-sm mt-1">
-                <span>❤️</span>
-                <span className="ml-1">65</span>
-              </div>
-            </div>
+        </div>
+        {loading && (
+        <div className="text-center">
+          <div className="flex items-center justify-center space-x-2">
+            <div className="w-5 h-5 border-4 border-t-4 border-t-transparent border-blue-500 rounded-full animate-spin"></div>
+            <span className=" font-semibold text-md">Loading...</span>
           </div>
         </div>
+      )}
       </div>
 
       {/* Floating Action Button */}
