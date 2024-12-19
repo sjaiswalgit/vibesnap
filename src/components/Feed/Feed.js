@@ -23,8 +23,7 @@ const Feed = () => {
     setLoading(true);
   
     try {
-      console.time("Fetch Posts");
-  
+      console.log("Fetch Posts");
       // Query to fetch posts
       const postsQuery = query(
         collection(db, 'posts'),
@@ -33,9 +32,6 @@ const Feed = () => {
         ...(lastDoc ? [startAfter(lastDoc)] : [])
       );
       const postsSnapshot = await getDocs(postsQuery);
-  
-      console.time("Batch Fetch User Data");
-  
       // Get unique user IDs from the posts
       const userIds = Array.from(
         new Set(postsSnapshot.docs.map((doc) => doc.data().uid))
@@ -51,8 +47,6 @@ const Feed = () => {
         userMap.set(doc.id, doc.data());
       });
   
-      console.timeEnd("Batch Fetch User Data");
-  
       // Map posts with user details
       const fetchedPosts = postsSnapshot.docs.map((doc) => {
         const postData = doc.data();
@@ -66,11 +60,9 @@ const Feed = () => {
       });
   
       // Update state
-      setPosts((prev) => [...prev, ...fetchedPosts]);
+      setPosts([...posts, ...fetchedPosts]);
       setLastDoc(postsSnapshot.docs[postsSnapshot.docs.length - 1] || null);
       setHasMore(postsSnapshot.docs.length === 20);
-  
-      console.timeEnd("Fetch Posts");
       setLoading(false);
     } catch (error) {
       console.error('Error fetching posts:', error);
