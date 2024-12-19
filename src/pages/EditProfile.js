@@ -7,6 +7,7 @@ import { setDoc, doc } from "firebase/firestore";
 import { FaArrowLeft } from "react-icons/fa";
 import { useNavigate } from 'react-router-dom';
 import { useLoadingContext } from '../context/LoaderContext';
+import ProfileIcon from "../assests/profileIcon.jpg"
 function EditProfile() {
     const [name, setName] = useState("");
     const [bio, setBio] = useState("");
@@ -81,15 +82,17 @@ function EditProfile() {
                 </div>
                 {/* Background Image */}
                 <img
-                    src={coverPreview || "https://via.placeholder.com/600x300?text=Cover+Image"}
+                    src={coverPreview || "https://placehold.co/600x300?text=Cover%20+%20Image"}
                     alt="Cover"
+                    onError={(e)=>{e.target.src="https://placehold.co/600x300?text=Cover%20+%20Image"}}
                     className="w-full h-40 object-cover rounded-b-[1rem]"
                 />
                 {/* Profile Picture */}
                 <div className="absolute -bottom-12 left-4">
                     <img
-                        src={photoPreview || "https://via.placeholder.com/100"}
+                        src={photoPreview || ProfileIcon}
                         alt="Profile"
+                        onError={(e)=>{e.target.src=ProfileIcon}}
                         className="w-28 h-28 rounded-full object-cover shadow-md"
                     />
                     <div className="absolute bottom-2 right-0">

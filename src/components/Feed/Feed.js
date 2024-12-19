@@ -1,18 +1,21 @@
-import React, { useState, useEffect, useCallback,useRef } from 'react';
+import React, { useState, useEffect, useCallback, useRef } from 'react';
 import { db } from '../../firebase/config';
 import { collection, query, orderBy, limit, startAfter, doc, getDoc, getDocs, updateDoc } from 'firebase/firestore';
 import ImageCarousel from '../Swipper';
 import { FaRegHeart, FaHeart } from "react-icons/fa";
 import { useAuthContext } from '../../context/AuthContext';
+import { useNavigate } from "react-router-dom";
 import { FaLocationArrow } from "react-icons/fa6";
 import SharePost from './ShareFeed';
+import ProfileIcon from '../../assests/profileIcon.jpg'
 const Feed = () => {
   const [posts, setPosts] = useState([]);
   const [lastDoc, setLastDoc] = useState(null);
   const [hasMore, setHasMore] = useState(true);
-  const [loading,setLoading]= useState(false)
+  const [loading, setLoading] = useState(false)
   const [showShare, setShowShare] = useState(false)
   const { currentUser } = useAuthContext()
+  const navigate = useNavigate()
   const scrollRef = useRef(null)
   // Fetch posts with user data
   const fetchPosts = useCallback(async () => {
@@ -51,7 +54,7 @@ const Feed = () => {
       console.error('Error fetching posts:', error);
       setLoading(false)
     }
-  }, [db, hasMore, lastDoc, setPosts, posts,setLoading]);
+  }, [db, hasMore, lastDoc, setPosts, posts, setLoading]);
 
   // Infinite Scroll Handler
   useEffect(() => {
@@ -81,7 +84,7 @@ const Feed = () => {
   }
 
   const handleLike = async (post, index) => {
-    
+
     const postRef = doc(db, 'posts', post.id);
     const newLiked = [...posts];
     try {
@@ -116,7 +119,7 @@ const Feed = () => {
     const scrollbar = scrollRef.current;
     if (scrollbar && !loading) {
       const { scrollTop, scrollHeight, clientHeight } = scrollbar;
-      if (scrollHeight - scrollTop <= clientHeight+1500) {
+      if (scrollHeight - scrollTop <= clientHeight + 1500) {
         console.log("Near the bottom, load more items!");
         fetchPosts();
         // Call your function to load more data here
@@ -124,7 +127,7 @@ const Feed = () => {
     }
   };
 
- 
+
   useEffect(() => {
     const scrollbar = scrollRef.current;
     if (scrollbar) {
@@ -139,7 +142,7 @@ const Feed = () => {
   }, [loading]);
 
   const renderHashtags = (content) => {
-    if(!content) return ""
+    if (!content) return ""
     return content.split(/(\s+)/).map((word, index) => {
       // Check if the word starts with '#'
       if (word.startsWith("#")) {
@@ -157,15 +160,15 @@ const Feed = () => {
     <div ref={scrollRef} className="space-y-6 h-[calc(100%-7rem)] overflow-y-auto no-scrollbar">
       {posts.map((post, index) => (
         <div key={index} className={`p-4 rounded-2xl shadow-md ${index % 2 === 0 ? "bg-purple-100" : "bg-yellow-50"}`}>
-          <div className="flex items-center space-x-3 mb-2">
+          <div onClick={()=>{navigate(`/profile/${post.uid}`)}} className="flex items-center space-x-3 mb-2">
             <img
-              src={post.displayPhoto}
+              src={post.displayPhoto || ProfileIcon}
               alt={post.displayName}
               className="w-10 h-10 rounded-full"
               loading='lazy'
             />
             <div>
-              <h3 className="font-bold">{post.displayName}</h3>
+              <h3 className="font-bold capitalize">{post.displayName}</h3>
               <p className="text-sm text-gray-400">{recentDate(post.createdAt)}</p>
             </div>
           </div>

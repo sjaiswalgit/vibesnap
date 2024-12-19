@@ -4,58 +4,14 @@ import { Swiper, SwiperSlide } from "swiper/react";
 import { Navigation, Pagination } from "swiper/modules";
 import { MdDelete } from "react-icons/md";
 // Import Swiper and module styles
+import VideoPlayer from "./VideoPlayer";
 
 import "swiper/css";
 import "swiper/css/navigation";
 import "swiper/css/pagination";
 import "./custom.css"
 const ImageCarousel = ({ files, deleteImage, showDeleteBTn = false }) => {
-  const videoRef = useRef(null);
-  const [isIntersecting, setIsIntersecting] = useState(false);
   
-  useEffect(() => {
-    const videoElement = videoRef.current;
-  
-    const observer = new IntersectionObserver(
-      ([entry]) => {
-        setIsIntersecting(entry.isIntersecting);
-      },
-      { threshold: 0.5 } // At least 50% of the video should be visible
-    );
-  
-    if (videoElement) {
-      observer.observe(videoElement);
-    }
-  
-    return () => {
-      if (videoElement) {
-        observer.unobserve(videoElement);
-      }
-    };
-  }, []);
-  
-  useEffect(() => {
-    if (showDeleteBTn) {
-      return;
-    }
-  
-    const videoElement = videoRef.current;
-    if (videoElement) {
-      const isPlaying = !videoElement.paused && !videoElement.ended;
-  
-      if (isIntersecting) {
-        videoElement
-          .play()
-          .catch((error) => {
-            console.warn("Video play interrupted:", error.message);
-          });
-      } else if (isPlaying) {
-        videoElement.pause();
-      }
-    }
-  }, [isIntersecting]);
-  
-
 
 
 
@@ -77,11 +33,8 @@ const ImageCarousel = ({ files, deleteImage, showDeleteBTn = false }) => {
                 className="w-full h-full object-cover rounded-lg"
               />}
             {file.type === "video" &&
-              <video
-                ref={videoRef}
-                src={file.src}
-                alt="Uploaded"
-                muted
+              <VideoPlayer  
+              videoUrl={file.src}
                 className="w-full h-full object-cover rounded-lg"
               />}
             {showDeleteBTn &&

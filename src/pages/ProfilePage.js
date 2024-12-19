@@ -1,18 +1,20 @@
 import React, { useEffect, useState, useCallback, useRef } from "react";
-import { Link } from "react-router-dom";
+import { Link, useParams } from "react-router-dom";
 import { useAuthContext } from "../context/AuthContext";
 import { db } from '../firebase/config';
 import { collection, query, orderBy, limit, startAfter, doc, getDoc, getDocs, where } from 'firebase/firestore';
 import AddPost from "../components/CreatePost/AddPost";
 import { FaArrowLeft, FaHeart } from "react-icons/fa";
 import { useNavigate } from 'react-router-dom';
+import ProfileIcon from "../assests/profileIcon.jpg"
 function ProfilePage() {
   const [posts, setPosts] = useState([]);
   const [lastDoc, setLastDoc] = useState(null);
   const [hasMore, setHasMore] = useState(true);
   const [loading, setLoading] = useState(false)
-  const [showShare, setShowShare] = useState(false)
+  const [userDetails,setUserDetails]=useState({})
   const { currentUser } = useAuthContext()
+  const {id}=useParams()
   const navigate = useNavigate();
   const scrollRef = useRef(null)
   // Fetch posts with user data
@@ -22,7 +24,7 @@ function ProfilePage() {
     try {
       const postsQuery = query(
         collection(db, 'posts'),
-        where('uid', '==', currentUser.uid),
+        where('uid', '==', id),
         orderBy('createdAt', 'desc'),
         limit(5),
         ...(lastDoc ? [startAfter(lastDoc)] : [])
@@ -33,7 +35,6 @@ function ProfilePage() {
       let lastVisible = null;
       for (const docSnapshot of postsSnapshot.docs) {
         const postData = docSnapshot.data();
-
 
         fetchedPosts.push(postData);
 
@@ -50,14 +51,29 @@ function ProfilePage() {
     }
   }, [db, hasMore, lastDoc, setPosts, posts, setLoading]);
 
+  const fetchUserDetails =async()=>{
+    try{
+      const  userDoc = await getDoc(doc(db, 'users', id));
+      if(userDoc.exists()){
+        const user =userDoc.data()
+        setUserDetails(user)
+      }
+    }
+    catch(err){
+
+    }
+  }
+
+
   useEffect(() => {
+    fetchUserDetails()
     fetchPosts();
 
   }, []);
 
 
   return (
-    <div className="bg-gray-100 h-screen w-screen">
+    <div className="bg-gray-100 min-h-screen w-screen">
       {/* Header Section */}
       <div className="relative">
         <div className="absolute top-1 left-1 flex items-center p-4 text-white">
@@ -68,33 +84,36 @@ function ProfilePage() {
         </div>
         {/* Background Image */}
         <img
-          src={currentUser.coverURL || "https://via.placeholder.com/600x300?text=Cover+Image"}
+          src={userDetails.coverURL || "https://placehold.co/600x300?text=Cover%20+%20Image"}
           alt="Cover"
+          onError={(e)=>e.target.src="https://placehold.co/600x300?text=Cover%20+%20Image"}
           className="w-full h-40 object-cover rounded-b-[1rem]"
         />
         {/* Profile Picture */}
         <div className="absolute -bottom-12 left-4">
           <img
-            src={currentUser.photoURL || "https://via.placeholder.com/100"}
+            src={userDetails.photoURL || ProfileIcon}
             alt="Profile"
+            onError={(e)=>{e.target.src=ProfileIcon}}
             className="w-28 h-28 rounded-full object-cover shadow-md"
           />
         </div>
+        {id===currentUser.uid &&
         <div className="absolute bottom-[-3rem] right-4">
           <Link to="/edit-profile">
             <button className="bg-white font-bold text-gray-800 px-4 py-2 rounded-full border border-gray-300 w-[12rem]">
               Edit Profile
             </button>
           </Link>
-        </div>
+        </div>}
       </div>
 
 
       {/* User Bio */}
       <div className="mt-16 px-4">
-        <h1 className="text-2xl font-bold capitalize">{currentUser.displayName}</h1>
+        <h1 className="text-2xl font-bold capitalize">{userDetails.displayName}</h1>
         <p className="text-gray-600 mt-2">
-          {currentUser.bio}
+          {userDetails.bio}
         </p>
       </div>
 

@@ -8,54 +8,54 @@ import ProfilePage from './pages/ProfilePage';
 import EditProfile from './pages/EditProfile';
 import CreatePost from './pages/CreatePost';
 import ProtectedRoute from './components/Auth/ProtectedRoute';
-import {LoaderPovider} from './context/LoaderContext';
+import { LoaderPovider } from './context/LoaderContext';
 
 const App = () => (
-    <DeviceProvider>
-      <LoaderPovider>
-    <AuthProvider>
-      <Routes>
-        {/* Public route */}
-        <Route path="/login" element={<LoginPage />} />
+  <DeviceProvider>
+    <LoaderPovider>
+      <AuthProvider>
+        <Routes>
+          {/* Public route */}
+          <Route path="/login" element={<LoginPage />} />
 
-        {/* Protected routes */}
-        <Route
-          path="/"
-          element={
-            <ProtectedRoute>
-              <Home />
-            </ProtectedRoute>
-          }
-        />
-        <Route
-          path="/profile"
-          element={
-            <ProtectedRoute>
-              <ProfilePage />
-            </ProtectedRoute>
-          }
-        />
-        <Route
-          path="/edit-profile"
-          element={
-            <ProtectedRoute>
-              <EditProfile />
-            </ProtectedRoute>
-          }
-        />
-        <Route
-          path="/create-post"
-          element={
-            <ProtectedRoute>
-              <CreatePost />
-            </ProtectedRoute>
-          }
-        />
-        <Route path="*" element={<Navigate to="/" replace />} />
-      </Routes>
-    </AuthProvider>
+          {/* Protected routes */}
+          <Route
+            path="/"
+            element={
+              <ProtectedRoute>
+                <Home />
+              </ProtectedRoute>
+            }
+          />
+          <Route
+            path="/profile/:id"
+            element={
+              <ProtectedRoute>
+                <ProfilePage />
+              </ProtectedRoute>
+            }
+          />
+          <Route
+            path="/edit-profile"
+            element={
+              <ProtectedRoute>
+                <EditProfile />
+              </ProtectedRoute>
+            }
+          />
+          <Route
+            path="/create-post"
+            element={
+              <ProtectedRoute>
+                <CreatePost />
+              </ProtectedRoute>
+            }
+          />
+          <Route path="*" element={<Navigate to="/" replace />} />
+        </Routes>
+      </AuthProvider>
     </LoaderPovider>
-    </DeviceProvider>
+  </DeviceProvider>
 
 );
 
