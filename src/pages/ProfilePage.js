@@ -112,7 +112,7 @@ function ProfilePage() {
       {/* User Bio */}
       <div className="mt-16 px-4">
         <h1 className="text-2xl font-bold capitalize">{userDetails.displayName}</h1>
-        <p className="text-gray-600 mt-2">
+        <p className="text-gray-600 mt-2 font-kumbh">
           {userDetails.bio}
         </p>
       </div>
@@ -139,7 +139,7 @@ function ProfilePage() {
                     className="w-full h-auto object-cover"
                   />}
                 <div className="absolute bottom-2 left-0 p-2">
-                <p className="w-[8rem] text-white font-medium overflow-ellipsis overflow-hidden whitespace-nowrap">{post.caption || ""}</p>
+                <p className="w-[8rem] text-white font-medium overflow-ellipsis overflow-hidden whitespace-nowrap font-kumbh">{post.caption || ""}</p>
                   <div className="flex items-center text-gray-500 text-sm mt-1">
                     <span><FaHeart /></span>
                     <span className="ml-1">{post.likeCount || 0}</span>

@@ -97,10 +97,10 @@ function EditProfile() {
                     />
                     <div className="absolute bottom-2 right-0">
                         <label
-                            className="bg-white text-gray-800 font-medium px-2 py-2 rounded-full border border-gray-300"
+                            className="bg-white text-gray-800 font-medium px-2.5 py-2.5 rounded-full border border-gray-300"
                             htmlFor="profilePhoto"
                         >
-                            <MdEdit className="inline-block text-gray-600" />
+                            <MdEdit className="inline-block text-gray-600 text-lg" />
                         </label>
                         <input
                             type="file"
@@ -148,7 +148,7 @@ function EditProfile() {
                     type="text"
                     id="name"
                     placeholder="e.g Raj..."
-                    className="bg-transparent border-b-[1px] font-semibold text-xl border-gray-500 w-full outline-none capitalize"
+                    className="bg-transparent border-b-[1px] font-semibold text-md border-gray-500 w-full outline-none capitalize font-kumbh"
                     value={name}
                     onChange={(e) => setName(e.target.value)}
                 />
@@ -160,7 +160,7 @@ function EditProfile() {
                 <br />
                 <textarea
                     id="bio"
-                    className="bg-transparent font-semibold border-b-[1px] text-xl border-gray-500 w-full outline-none resize-none max-h-[120px]"
+                    className="bg-transparent font-semibold border-b-[1px] text-md border-gray-500 w-full outline-none resize-none max-h-[120px] font-kumbh"
                     value={bio}
                     onChange={(e) => setBio(e.target.value)}
                 ></textarea>

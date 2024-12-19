@@ -173,7 +173,7 @@ const Feed = () => {
             </div>
           </div>
 
-          <p className="text-gray-700 mb-3">{renderHashtags(post.caption)}</p>
+          <p className="text-gray-700 mb-3 font-kumbh">{renderHashtags(post.caption)}</p>
 
           <div>
             <ImageCarousel files={post.fileURLs || []} />

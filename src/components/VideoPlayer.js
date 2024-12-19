@@ -1,4 +1,6 @@
 import React, { useState, useEffect, useRef } from "react";
+import { PiPlayCircleFill,PiPauseCircleFill } from "react-icons/pi";
+import { BiSolidVolumeMute,BiSolidVolumeFull } from "react-icons/bi";
 
 const VideoPlayer = ({ videoUrl,showDeleteBTn=false }) => {
   const videoRef = useRef(null);
@@ -107,7 +109,6 @@ const VideoPlayer = ({ videoUrl,showDeleteBTn=false }) => {
       <video
         ref={videoRef}
         className="w-full h-auto"
-        onClick={handlePlayPause}
         src={videoUrl}
         muted
         controls={false} // Disable default controls
@@ -115,22 +116,22 @@ const VideoPlayer = ({ videoUrl,showDeleteBTn=false }) => {
 
       {/* Play/Pause Button */}
       {showControls && (
-        <button
+        <div
           onClick={handlePlayPause}
-          className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 bg-black/50 text-white rounded-full px-4 py-2"
+          className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 text-white text-3xl"
         >
-          {isPlaying ? "Pause" : "Play"}
-        </button>
+          {isPlaying ?<PiPauseCircleFill /> :<PiPlayCircleFill  />}
+        </div>
       )}
 
       {/* Mute Button */}
       {showControls && (
-        <button
+        <div
           onClick={handleMute}
-          className="absolute bottom-4 right-4 bg-black/50 text-white rounded-md px-3 py-1"
+          className="absolute bottom-4 right-4  text-white"
         >
-          {isMuted ? "Unmute" : "Mute"}
-        </button>
+          {isMuted ? <BiSolidVolumeMute />: <BiSolidVolumeFull /> }
+        </div>
       )}
     </div>
   );
