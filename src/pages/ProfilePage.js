@@ -12,9 +12,9 @@ function ProfilePage() {
   const [lastDoc, setLastDoc] = useState(null);
   const [hasMore, setHasMore] = useState(true);
   const [loading, setLoading] = useState(false)
-  const [userDetails,setUserDetails]=useState({})
+  const [userDetails, setUserDetails] = useState({})
   const { currentUser } = useAuthContext()
-  const {id}=useParams()
+  const { id } = useParams()
   const navigate = useNavigate();
   const scrollRef = useRef(null)
   // Fetch posts with user data
@@ -51,15 +51,15 @@ function ProfilePage() {
     }
   }, [db, hasMore, lastDoc, setPosts, posts, setLoading]);
 
-  const fetchUserDetails =async()=>{
-    try{
-      const  userDoc = await getDoc(doc(db, 'users', id));
-      if(userDoc.exists()){
-        const user =userDoc.data()
+  const fetchUserDetails = async () => {
+    try {
+      const userDoc = await getDoc(doc(db, 'users', id));
+      if (userDoc.exists()) {
+        const user = userDoc.data()
         setUserDetails(user)
       }
     }
-    catch(err){
+    catch (err) {
 
     }
   }
@@ -86,7 +86,7 @@ function ProfilePage() {
         <img
           src={userDetails.coverURL || "https://placehold.co/600x300?text=Cover%20+%20Image"}
           alt="Cover"
-          onError={(e)=>e.target.src="https://placehold.co/600x300?text=Cover%20+%20Image"}
+          onError={(e) => e.target.src = "https://placehold.co/600x300?text=Cover%20+%20Image"}
           className="w-full h-40 object-cover rounded-b-[1rem]"
         />
         {/* Profile Picture */}
@@ -94,18 +94,18 @@ function ProfilePage() {
           <img
             src={userDetails.photoURL || ProfileIcon}
             alt="Profile"
-            onError={(e)=>{e.target.src=ProfileIcon}}
+            onError={(e) => { e.target.src = ProfileIcon }}
             className="w-28 h-28 rounded-full object-cover shadow-md"
           />
         </div>
-        {id===currentUser.uid &&
-        <div className="absolute bottom-[-3rem] right-4">
-          <Link to="/edit-profile">
-            <button className="bg-white font-bold text-gray-800 px-4 py-2 rounded-full border border-gray-300 w-[12rem]">
-              Edit Profile
-            </button>
-          </Link>
-        </div>}
+        {id === currentUser.uid &&
+          <div className="absolute bottom-[-3rem] right-4">
+            <Link to="/edit-profile">
+              <button className="bg-white font-bold text-gray-800 px-4 py-2 rounded-full border border-gray-300 w-[12rem]">
+                Edit Profile
+              </button>
+            </Link>
+          </div>}
       </div>
 
 
@@ -124,7 +124,7 @@ function ProfilePage() {
           {/* Posts Grid */}
           <div className="w-[100%] " style={{ columns: "2" }}>
             {/* Post 1 */}
-            {posts.filter((e)=>e.fileURLs.length>0).map((post, index) => (
+            {posts.map((post, index) => (
               <div key={index} className="relative w-full bg-white rounded-lg shadow-md overflow-hidden mb-2">
                 {post.fileURLs.length > 0 && post.fileURLs[0].type == "image" &&
                   <img
@@ -138,8 +138,14 @@ function ProfilePage() {
                     alt="posts pic"
                     className="w-full h-auto object-cover"
                   />}
+                {
+                  post.fileURLs.length === 0 &&
+                  <div className={`w-full h-60 flex items-center justify-center ${index % 2 === 0 ? "bg-purple-100" : "bg-yellow-50"}`} >
+                    <p className="text-gray-500 text-center">{post.caption || ""}</p>
+                  </div>
+                }
                 <div className="absolute bottom-2 left-0 p-2">
-                <p className="w-[8rem] text-white font-medium overflow-ellipsis overflow-hidden whitespace-nowrap font-kumbh">{post.caption || ""}</p>
+                  {post.fileURLs.length > 0 && <p className="w-[8rem] text-white font-medium overflow-ellipsis overflow-hidden whitespace-nowrap font-kumbh">{post.caption || ""}</p>}
                   <div className="flex items-center text-gray-500 text-sm mt-1">
                     <span><FaHeart /></span>
                     <span className="ml-1">{post.likeCount || 0}</span>
@@ -151,13 +157,13 @@ function ProfilePage() {
 
         </div>
         {loading && (
-        <div className="text-center">
-          <div className="flex items-center justify-center space-x-2">
-            <div className="w-5 h-5 border-4 border-t-4 border-t-transparent border-blue-500 rounded-full animate-spin"></div>
-            <span className=" font-semibold text-md">Loading...</span>
+          <div className="text-center">
+            <div className="flex items-center justify-center space-x-2">
+              <div className="w-5 h-5 border-4 border-t-4 border-t-transparent border-blue-500 rounded-full animate-spin"></div>
+              <span className=" font-semibold text-md">Loading...</span>
+            </div>
           </div>
-        </div>
-      )}
+        )}
       </div>
 
       {/* Floating Action Button */}
