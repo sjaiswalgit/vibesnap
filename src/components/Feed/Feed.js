@@ -56,7 +56,7 @@ const Feed = () => {
           ...postData,
           id: doc.id,
           displayName: user.displayName || 'Unknown User',
-          displayPhoto: user.photoURL || 'https://via.placeholder.com/40',
+          displayPhoto: user.photoURL || ProfileIcon,
         };
       });
   
@@ -183,6 +183,7 @@ const Feed = () => {
               src={post.displayPhoto || ProfileIcon}
               alt={post.displayName}
               className="w-10 h-10 rounded-full"
+              onError={(e) => e.target.src = ProfileIcon}
               loading='lazy'
             />
             <div>

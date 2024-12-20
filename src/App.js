@@ -8,6 +8,9 @@ import ProfilePage from './pages/ProfilePage';
 import EditProfile from './pages/EditProfile';
 import CreatePost from './pages/CreatePost';
 import ProtectedRoute from './components/Auth/ProtectedRoute';
+import OtherSignIN from './pages/OtherSignIn';
+import Signup from './pages/Registration';
+import ForgotPassword from './pages/ForgotPassword';
 import { ToastContainer } from 'react-toastify';
 
 
@@ -51,6 +54,9 @@ const App = () => (
               </ProtectedRoute>
             }
           />
+          <Route path="/otherlogin" element={<OtherSignIN />} />
+          <Route path="/signup" element={<Signup />} />
+          <Route path="/forgot-password" element={<ForgotPassword />} />
           <Route path="*" element={<Navigate to="/" replace />} />
         </Routes>
         <ToastContainer />

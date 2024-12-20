@@ -26,15 +26,17 @@ function Home() {
         menu={{
           items: [{
             key: '1',
-            label: (<span onClick={() =>{ navigate(`/profile/${currentUser.uid}`)} } >My Profile</span>),
+            label: "My Profile",
+            onClick: () => { navigate(`/profile/${currentUser.uid}`)},
           },
           {
             type: 'divider',
           },
           {
             key: '2',
-            label: (<span onClick={() => signOut(auth)}>Log Out</span>),
+            label: "Log Out",
             extra: <PiSignOutThin />,
+            onClick: () => signOut(auth)
           }]
         }}>
           <img

@@ -59,7 +59,8 @@ function EditProfile() {
 
             // Upload cover photo if a new file is selected
             if (coverFile) {
-                const coverURL = await uploadFile(coverFile, `${currentUser.uid}/cover`);
+                const compressedFile = await compressImage(coverFile)
+                const coverURL = await uploadFile(compressedFile, `${currentUser.uid}/cover`);
                 updatedData.coverURL = coverURL;
             }
 
