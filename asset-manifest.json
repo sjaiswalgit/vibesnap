@@ -1,0 +1,28 @@
+{
+  "files": {
+    "main.css": "/vibesnap/static/css/main.a918630f.css",
+    "main.js": "/vibesnap/static/js/main.e907ead8.js",
+    "static/js/726.ac7dd173.chunk.js": "/vibesnap/static/js/726.ac7dd173.chunk.js",
+    "static/js/453.ed3810f9.chunk.js": "/vibesnap/static/js/453.ed3810f9.chunk.js",
+    "static/media/7.png": "/vibesnap/static/media/7.c17e5ed043ce79337eb8.png",
+    "static/media/5.png": "/vibesnap/static/media/5.35694ef2e06026bc7585.png",
+    "static/media/2.png": "/vibesnap/static/media/2.ed7fd75c81c62f616e4c.png",
+    "static/media/6.png": "/vibesnap/static/media/6.7b42fe29d5578a65f273.png",
+    "static/media/4.png": "/vibesnap/static/media/4.cf7c6cbbcac53bf911e5.png",
+    "static/media/9.png": "/vibesnap/static/media/9.5f1762d5fe33bc0316ea.png",
+    "static/media/8.png": "/vibesnap/static/media/8.6d412c3e1906a769fc8c.png",
+    "static/media/3.png": "/vibesnap/static/media/3.a281dcc09647da3d13e7.png",
+    "static/media/instagramIcon.svg": "/vibesnap/static/media/instagramIcon.9c734f2adf918a636e589ddb555384e5.svg",
+    "static/media/1.png": "/vibesnap/static/media/1.2f71bab6d02aed27f84a.png",
+    "static/media/googleIcon.svg": "/vibesnap/static/media/googleIcon.36c5c785656385389edfa2bd59a93238.svg",
+    "index.html": "/vibesnap/index.html",
+    "main.a918630f.css.map": "/vibesnap/static/css/main.a918630f.css.map",
+    "main.e907ead8.js.map": "/vibesnap/static/js/main.e907ead8.js.map",
+    "726.ac7dd173.chunk.js.map": "/vibesnap/static/js/726.ac7dd173.chunk.js.map",
+    "453.ed3810f9.chunk.js.map": "/vibesnap/static/js/453.ed3810f9.chunk.js.map"
+  },
+  "entrypoints": [
+    "static/css/main.a918630f.css",
+    "static/js/main.e907ead8.js"
+  ]
+}
