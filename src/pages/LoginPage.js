@@ -1,9 +1,20 @@
 import React from 'react';
 import googleIcon from '../assests/googleIcon.svg'
+import vibsnapLogo from '../assests/vibesnapLogo.png'
 import { signInWithPopup, signInWithRedirect } from 'firebase/auth';
 import { auth, provider, db } from '../firebase/config';
 import { doc, getDoc, setDoc } from 'firebase/firestore';
 import { useAuthContext } from '../context/AuthContext';
+import Images1 from '../assests/loginImages/1.png'
+import Images2 from '../assests/loginImages/2.png'
+import Images3 from '../assests/loginImages/3.png'
+import Images4 from '../assests/loginImages/4.png'
+import Images5 from '../assests/loginImages/5.png'
+import Images6 from '../assests/loginImages/6.png'
+import Images7 from '../assests/loginImages/7.png'
+import Images8 from '../assests/loginImages/8.png'
+import Images9 from '../assests/loginImages/9.png'
+
 
 const LoginPage = () => {
   const {loading,setLoading}=useAuthContext()
@@ -45,23 +56,24 @@ const LoginPage = () => {
   return (
     <div className='h-[100vh] w-[100vw] relative'>
       <div className="flex flex-1 flex-row justify-between gap-2 h-full overflow-hidden">
-        <div className='flex flex-1 flex-col gap-2 h-full'>
-          <img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQnz7lFtKvCUBQFGY1Z6Cwk3v8-xvXgKWz3dg&s" alt="" />
-          <img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQnz7lFtKvCUBQFGY1Z6Cwk3v8-xvXgKWz3dg&s" alt="" />
-        </div>
-        <div className="flex flex-1 flex-col h-full gap-2 transform -translate-y-1/2 ">
-          <img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQnz7lFtKvCUBQFGY1Z6Cwk3v8-xvXgKWz3dg&s" alt="" />
-          <img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQnz7lFtKvCUBQFGY1Z6Cwk3v8-xvXgKWz3dg&s" alt="" />
-          <img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQnz7lFtKvCUBQFGY1Z6Cwk3v8-xvXgKWz3dg&s" alt="" />
-          <img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQnz7lFtKvCUBQFGY1Z6Cwk3v8-xvXgKWz3dg&s" alt="" />
-        </div>
-        <div className='flex flex-1 flex-col gap-2 h-full '>
-          <img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQnz7lFtKvCUBQFGY1Z6Cwk3v8-xvXgKWz3dg&s" alt="" />
-          <img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQnz7lFtKvCUBQFGY1Z6Cwk3v8-xvXgKWz3dg&s" alt="" />
+        <div className='w-full gap-2' style={{columns:"3"}} >
+          <img src={Images9} alt="" className="w-full mb-2 aspect-[0.625] object-cover" />
+          <img src={Images8} alt="" className="w-full mb-2 aspect-[0.625] object-cover" />
+          <img src={Images7} alt="" className="w-full mb-2 aspect-[0.625] object-cover" />
+          <img src={Images1} alt="" className="w-full mb-2 aspect-[1.3] object-cover" />
+          <img src={Images6} alt="" className="w-full mb-2 aspect-[0.625] object-cover" />
+          <img src={Images5} alt="" className="w-full mb-2 aspect-[0.625] object-cover" />
+          <img src={Images4} alt="" className="w-full mb-2 aspect-[0.625] object-cover" />
+          <img src={Images3} alt="" className="w-full mb-2 aspect-[0.625] object-cover" />
+          <img src={Images2} alt="" className="w-full mb-2 aspect-[0.625] object-cover" />
+
+
+          
+
         </div>
       </div>
-      <div className="w-full bg-white h-[45%] shadow-lg rounded-t-[4rem] p-6 text-center absolute bottom-0 left-0" >
-        <h1 className="text-[28px] font-bold text-gray-800 mb-2">Vibesnap</h1>
+      <div className="w-full bg-white h-[40%] shadow-lg rounded-t-[4rem] p-6 text-center absolute bottom-0 left-0" >
+        <h1 className="text-[28px] font-bold text-gray-800 mb-2"><img src={vibsnapLogo} className='inline-block h-10'/> Vibesnap</h1>
         <p className="text-gray-500 mb-6 text-[16px]">Moments That Matter, Shared Forever.</p>
         <button onClick={handleGoogleLogin} className="flex items-center justify-center mx-auto bg-black text-white font-[700]  text-[16px] rounded-full py-4 px-6">
           <img
