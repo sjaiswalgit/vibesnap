@@ -4,19 +4,61 @@ import { IoLogoWhatsapp } from "react-icons/io";
 import { RiTelegram2Fill } from "react-icons/ri";
 import { PiCopySimpleFill } from "react-icons/pi"
 import InstagramIcon from "../../assests/instagramIcon.svg"
-const SharePost = ({setShowShare}) => {
+const SharePost = ({setShowShare,postId}) => {
+    const pageLink = `${process.env.React_App_Base_URL}/?id=${postId}`; // Replace with your base URL and postId
+    const encodedURL = encodeURIComponent(pageLink);
     const socialLinks = [
-        { name: "Twitter", icon: <FaTwitter className="text-blue-400" />, color: "bg-blue-100", link: "https://twitter.com" },
-        { name: "Facebook", icon: <FaFacebook className="text-blue-600"/>, color: "bg-blue-100", link: "https://facebook.com" },
-        { name: "Reddit", icon: <FaRedditAlien className="text-orange-600" />, color: "bg-red-100", link: "https://reddit.com" },
-        { name: "Discord", icon: <FaDiscord className="text-violet-700" />, color: "bg-blue-100", link: "https://discord.com" },
-        { name: "WhatsApp", icon: <IoLogoWhatsapp className="text-green-500 text-3xl" />, color: "bg-green-100", link: "https://whatsapp.com" },
-        { name: "Messenger", icon: <FaFacebookMessenger className="text-blue-600" />, color: "bg-blue-100", link: "https://messenger.com" },
-        { name: "Telegram", icon: <RiTelegram2Fill className="text-blue-500 text-3xl" />, color: "bg-blue-100", link: "https://telegram.org" },
-        { name: "Instagram", icon: <img className="p-3" src={InstagramIcon} />, color: "bg-pink-100", link: "https://instagram.com" },
+      { 
+        name: "Twitter", 
+        icon: <FaTwitter className="text-blue-400" />, 
+        color: "bg-blue-100", 
+        link: `https://twitter.com/intent/tweet?url=${encodedURL}&text=Check%20this%20out!` 
+      },
+      { 
+        name: "Facebook", 
+        icon: <FaFacebook className="text-blue-600" />, 
+        color: "bg-blue-100", 
+        link: `https://www.facebook.com/sharer/sharer.php?u=${encodedURL}` 
+      },
+      { 
+        name: "Reddit", 
+        icon: <FaRedditAlien className="text-orange-600" />, 
+        color: "bg-red-100", 
+        link: `https://reddit.com/submit?url=${encodedURL}&title=Check%20this%20out!` 
+      },
+      { 
+        name: "Discord", 
+        icon: <FaDiscord className="text-violet-700" />, 
+        color: "bg-blue-100", 
+        link: `https://discord.com/channels/@me` 
+      },
+      { 
+        name: "WhatsApp", 
+        icon: <IoLogoWhatsapp className="text-green-500 text-3xl" />, 
+        color: "bg-green-100", 
+        link: `https://wa.me/?text=${encodeURIComponent(`Check this out! ${pageLink}`)}` 
+      },
+      { 
+        name: "Messenger", 
+        icon: <FaFacebookMessenger className="text-blue-600" />, 
+        color: "bg-blue-100", 
+        link: `https://www.messenger.com/t?link=${encodedURL}` 
+      },
+      { 
+        name: "Telegram", 
+        icon: <RiTelegram2Fill className="text-blue-500 text-3xl" />, 
+        color: "bg-blue-100", 
+        link: `https://t.me/share/url?url=${encodedURL}&text=Check%20this%20out!` 
+      },
+      { 
+        name: "Instagram", 
+        icon: <img className="p-3" src={InstagramIcon} />, 
+        color: "bg-pink-100", 
+        link: `https://instagram.com` // Instagram doesn't have a direct URL share feature
+      },
     ];
+    
 
-    const pageLink = "https://www.arnav/feed";
 
     return (
 
@@ -47,10 +89,10 @@ const SharePost = ({setShowShare}) => {
             </div>
 
             {/* Page Link */}
-            <div>
+            <div className="w-full">
                 <p className=" text-md font-semibold mb-2">Page Link</p>
-                <div className="flex items-center justify-between bg-gray-100 p-2 rounded-md">
-                    <span className="text-gray-700 text-sm truncate">{pageLink}</span>
+                <div className="flex items-center justify-between bg-gray-100 p-2 rounded-md ">
+                    <span className="text-gray-700 text-sm truncate max-w-[15rem]">{pageLink}</span>
                     <button
                         onClick={() => navigator.clipboard.writeText(pageLink)}
                         className="text-gray-500 hover:text-gray-700 text-sm"

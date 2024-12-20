@@ -14,6 +14,7 @@ const Feed = () => {
   const [hasMore, setHasMore] = useState(true);
   const [loading, setLoading] = useState(false)
   const [showShare, setShowShare] = useState(false)
+  const [sharePostId, setSharePostId] = useState(null)
   const { currentUser } = useAuthContext()
   const navigate = useNavigate()
   const scrollRef = useRef(null)
@@ -28,7 +29,7 @@ const Feed = () => {
       const postsQuery = query(
         collection(db, 'posts'),
         orderBy('createdAt', 'desc'),
-        limit(20),
+        limit(20), // post loading at a time
         ...(lastDoc ? [startAfter(lastDoc)] : [])
       );
       const postsSnapshot = await getDocs(postsQuery);
@@ -201,7 +202,7 @@ const Feed = () => {
               <span className="text-xl">{post.likes[currentUser.uid] ? <FaHeart /> : <FaRegHeart />}</span>
               <span className="text-sm font-medium">{post.likeCount || ""}</span>
             </div>
-            <button onClick={() => { setShowShare(true) }} className={`pl-3 pr-3 pt-1 pb-1 rounded-full flex items-center space-x-1 text-gray-800 font-bold ${index % 2 === 0 ? "bg-purple-200" : "bg-yellow-100"}`}>
+            <button onClick={() => {setSharePostId(post.id); setShowShare(true) }} className={`pl-3 pr-3 pt-1 pb-1 rounded-full flex items-center space-x-1 text-gray-800 font-bold ${index % 2 === 0 ? "bg-purple-200" : "bg-yellow-100"}`}>
               <span className="text-lg"><FaLocationArrow /></span>
               <span>Share</span>
             </button>
@@ -220,7 +221,7 @@ const Feed = () => {
       {/* Share Menu */}
       {showShare &&
         <div onClick={() => { setShowShare(false) }} className="fixed top-[-1.5rem] left-0 w-full h-screen bg-black bg-opacity-50 flex items-center justify-center z-50">
-          <SharePost setShowShare={setShowShare} />
+          <SharePost setShowShare={setShowShare} postId={sharePostId}/>
         </div>
       }
     </div>
