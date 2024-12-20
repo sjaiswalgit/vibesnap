@@ -41,7 +41,7 @@ function ProfilePage() {
         lastVisible = docSnapshot;
       }
 
-      setPosts((prev) => [...posts, ...fetchedPosts]);
+      setPosts([...posts, ...fetchedPosts]);
       setLastDoc(lastVisible);
       setHasMore(postsSnapshot.docs.length === 5);
       setLoading(false)
@@ -70,6 +70,32 @@ function ProfilePage() {
     fetchPosts();
 
   }, []);
+
+   const handleScroll = () => {
+      const scrollbar = scrollRef.current;
+      if (scrollbar && !loading) {
+        const { scrollTop, scrollHeight, clientHeight } = scrollbar;
+        if (scrollHeight - scrollTop <= clientHeight + 1500) {
+          console.log("Near the bottom, load more items!");
+          fetchPosts();
+          // Call your function to load more data here
+        }
+      }
+    };
+  
+  
+    useEffect(() => {
+      const scrollbar = scrollRef.current;
+      if (scrollbar) {
+        scrollbar.addEventListener("scroll", handleScroll);
+      }
+  
+      return () => {
+        if (scrollbar) {
+          scrollbar.removeEventListener("scroll", handleScroll);
+        }
+      };
+    }, [loading]);
 
 
   return (
@@ -120,7 +146,7 @@ function ProfilePage() {
       {/* My Posts Section */}
       <div className="px-4 mt-6 ">
         <h2 className="text-lg font-bold mb-4">My Posts</h2>
-        <div className="w-[100%] h-[30rem] overflow-y-auto">
+        <div ref={scrollRef} className="w-[100%] h-[30rem] overflow-y-auto">
           {/* Posts Grid */}
           <div className="w-[100%] " style={{ columns: "2" }}>
             {/* Post 1 */}
