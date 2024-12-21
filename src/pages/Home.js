@@ -48,7 +48,7 @@ function Home() {
           />
           <div className="flex flex-col items-start">
           <p className="text-sm text-gray-400">Welcome Back,</p>
-          <h1 className="text-xl font-bold truncate capitalize w-[90%]">{currentUser.displayName}</h1>
+          <h1 className="text-xl font-bold capitalize">{currentUser.displayName}</h1>
         </div>
         </div>
         </Dropdown>
