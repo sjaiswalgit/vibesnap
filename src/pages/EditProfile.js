@@ -65,7 +65,7 @@ function EditProfile() {
             }
 
             await setDoc(userDocRef, updatedData, { merge: true });
-            toast("Profile updated",{type:"success"})
+            toast("Profile updated", { type: "success" })
             console.log("Profile updated successfully!");
         } catch (err) {
             console.error("Error updating profile: ", err);
@@ -144,41 +144,47 @@ function EditProfile() {
             </div>
 
             {/* User Bio */}
-            <div className="mt-16 px-4 w-full">
-                <label className="text-xl font-karla" htmlFor="name">
-                    Name
-                </label>
-                <br />
-                <input
-                    type="text"
-                    id="name"
-                    placeholder="e.g Raj..."
-                    className="bg-transparent border-b-[1px] font-semibold text-md border-gray-500 w-full outline-none capitalize font-kumbh"
-                    value={name}
-                    onChange={(e) => setName(e.target.value)}
-                />
-                <br />
-                <br />
-                <label className="text-xl font-karla" htmlFor="bio">
-                    Bio
-                </label>
-                <br />
-                <textarea
-                    id="bio"
-                    className="bg-transparent font-semibold border-b-[1px] text-md border-gray-500 w-full outline-none resize-none max-h-[120px] font-kumbh"
-                    value={bio}
-                    onChange={(e) => setBio(e.target.value)}
-                ></textarea>
-            </div>
+            <form onSubmit={(e) => { e.preventDefault(); onSave() }}>
+                <div className="mt-16 px-4 w-full">
+                    <label className="text-xl font-karla" htmlFor="name">
+                        Name
+                    </label>
+                    <br />
+                    <input
+                        type="text"
+                        id="name"
+                        placeholder="e.g Raj..."
+                        maxLength={30}
+                        minLength={4}
+                        required
+                        className="bg-transparent border-b-[1px] font-semibold text-md border-gray-500 w-full outline-none capitalize font-kumbh"
+                        value={name}
+                        onChange={(e) => setName(e.target.value)}
+                    />
+                    <br />
+                    <br />
+                    <label className="text-xl font-karla" htmlFor="bio">
+                        Bio
+                    </label>
+                    <br />
+                    <textarea
+                        id="bio"
+                        maxLength={75}
+                        className="bg-transparent font-semibold border-b-[1px] text-md border-gray-500 w-full outline-none resize-none max-h-[120px] font-kumbh"
+                        value={bio}
+                        onChange={(e) => setBio(e.target.value)}
+                    ></textarea>
+                </div>
 
-            <div className="fixed bottom-2 left-0 w-full px-4">
-                <button
-                    className="bg-black h-16 w-full rounded-3xl text-white font-semibold text-2xl"
-                    onClick={onSave}
-                >
-                    Save
-                </button>
-            </div>
+                <div className="fixed bottom-2 left-0 w-full px-4">
+                    <button
+                        className="bg-black h-16 w-full rounded-3xl text-white font-semibold text-2xl"
+                        type="submit"
+                    >
+                        Save
+                    </button>
+                </div>
+            </form>
             {loading && (
                 <div className="fixed top-0 left-0 w-full h-full bg-black bg-opacity-50 flex items-center justify-center z-50">
                     <div className="flex items-center justify-center space-x-2">
