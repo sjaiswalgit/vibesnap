@@ -39,17 +39,19 @@ function Home() {
               onClick: () => signOut(auth)
             }]
           }}>
+          <div className="flex items-center space-x-4">
           <img
             src={currentUser.photoURL || ProfileIcon}
             alt="User Avatar"
             onError={(e) => { e.target.src = ProfileIcon }}
             className="w-12 h-12 rounded-full"
           />
-        </Dropdown>
-        <div>
+          <div className="flex flex-col items-start">
           <p className="text-sm text-gray-400">Welcome Back,</p>
           <h1 className="text-xl font-bold capitalize">{currentUser.displayName}</h1>
         </div>
+        </div>
+        </Dropdown>
       </header>
 
       {/* Feeds Heading */}
