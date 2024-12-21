@@ -154,7 +154,7 @@ function EditProfile() {
                         type="text"
                         id="name"
                         placeholder="e.g Raj..."
-                        maxLength={30}
+                        maxLength={25}
                         minLength={4}
                         required
                         className="bg-transparent border-b-[1px] font-semibold text-md border-gray-500 w-full outline-none capitalize font-kumbh"

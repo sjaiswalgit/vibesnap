@@ -62,7 +62,7 @@ const Signup = () => {
                         className="w-full px-4 py-2 border rounded-md"
                         value={name}
                         minLength={4}
-                        maxLength={30}
+                        maxLength={25}
                         onChange={(e) => setName(e.target.value)}
                         required
                         disabled={isLoading}
