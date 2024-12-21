@@ -26,7 +26,7 @@ function ProfilePage() {
         collection(db, 'posts'),
         where('uid', '==', id),
         orderBy('createdAt', 'desc'),
-        limit(5),
+        limit(20),
         ...(lastDoc ? [startAfter(lastDoc)] : [])
       );
 
@@ -43,7 +43,7 @@ function ProfilePage() {
 
       setPosts([...posts, ...fetchedPosts]);
       setLastDoc(lastVisible);
-      setHasMore(postsSnapshot.docs.length === 5);
+      setHasMore(postsSnapshot.docs.length === 20);
       setLoading(false)
     } catch (error) {
       console.error('Error fetching posts:', error);
@@ -156,6 +156,7 @@ function ProfilePage() {
                   <img
                     src={post.fileURLs[0].src}
                     alt="posts pic"
+                    loading="lazy"
                     className="w-full h-auto object-cover"
                   />}
                 {post.fileURLs.length > 0 && post.fileURLs[0].type == "video" &&

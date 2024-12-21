@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect } from "react";
 import Feed from "../components/Feed/Feed";
 import SingleFeed from "../components/Feed/SingleFeed";
 import { useAuthContext } from "../context/AuthContext";
@@ -14,43 +14,43 @@ function Home() {
   const [searchParams] = useSearchParams();
   const postid = searchParams.get('id');
   const { currentUser } = useAuthContext();
-  const navigate = useNavigate()
+  const navigate = useNavigate();
 
 
   return (
     <div className="relative bg-gray-100 h-screen p-4 w-screen">
       {/* Header Section */}
-      
-        <header className="flex items-center space-x-4 mb-6">
+
+      <header className="flex items-center space-x-4 mb-6">
         <Dropdown
-        menu={{
-          items: [{
-            key: '1',
-            label: "My Profile",
-            onClick: () => { navigate(`/profile/${currentUser.uid}`)},
-          },
-          {
-            type: 'divider',
-          },
-          {
-            key: '2',
-            label: "Log Out",
-            extra: <PiSignOutThin />,
-            onClick: () => signOut(auth)
-          }]
-        }}>
+          menu={{
+            items: [{
+              key: '1',
+              label: "My Profile",
+              onClick: () => { navigate(`/profile/${currentUser.uid}`) },
+            },
+            {
+              type: 'divider',
+            },
+            {
+              key: '2',
+              label: "Log Out",
+              extra: <PiSignOutThin />,
+              onClick: () => signOut(auth)
+            }]
+          }}>
           <img
             src={currentUser.photoURL || ProfileIcon}
             alt="User Avatar"
             onError={(e) => { e.target.src = ProfileIcon }}
             className="w-12 h-12 rounded-full"
           />
-           </Dropdown>
-          <div>
-            <p className="text-sm text-gray-400">Welcome Back,</p>
-            <h1 className="text-xl font-bold capitalize">{currentUser.displayName}</h1>
-          </div>
-        </header>
+        </Dropdown>
+        <div>
+          <p className="text-sm text-gray-400">Welcome Back,</p>
+          <h1 className="text-xl font-bold capitalize">{currentUser.displayName}</h1>
+        </div>
+      </header>
 
       {/* Feeds Heading */}
       <h2 className="text-2xl font-bold mb-4">Feeds</h2>
