@@ -1,7 +1,7 @@
 {
   "files": {
     "main.css": "/vibesnap/static/css/main.a918630f.css",
-    "main.js": "/vibesnap/static/js/main.e907ead8.js",
+    "main.js": "/vibesnap/static/js/main.b12e7e89.js",
     "static/js/726.ac7dd173.chunk.js": "/vibesnap/static/js/726.ac7dd173.chunk.js",
     "static/js/453.ed3810f9.chunk.js": "/vibesnap/static/js/453.ed3810f9.chunk.js",
     "static/media/7.png": "/vibesnap/static/media/7.c17e5ed043ce79337eb8.png",
@@ -17,12 +17,12 @@
     "static/media/googleIcon.svg": "/vibesnap/static/media/googleIcon.36c5c785656385389edfa2bd59a93238.svg",
     "index.html": "/vibesnap/index.html",
     "main.a918630f.css.map": "/vibesnap/static/css/main.a918630f.css.map",
-    "main.e907ead8.js.map": "/vibesnap/static/js/main.e907ead8.js.map",
+    "main.b12e7e89.js.map": "/vibesnap/static/js/main.b12e7e89.js.map",
     "726.ac7dd173.chunk.js.map": "/vibesnap/static/js/726.ac7dd173.chunk.js.map",
     "453.ed3810f9.chunk.js.map": "/vibesnap/static/js/453.ed3810f9.chunk.js.map"
   },
   "entrypoints": [
     "static/css/main.a918630f.css",
-    "static/js/main.e907ead8.js"
+    "static/js/main.b12e7e89.js"
   ]
 }
